@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="从复杂度和数据表达出发，建立枚举、哈希、有序化与离线处理的基本判断框架。">
+  <title>分析与基础建模 · LeetCode Guidebook</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body class="reader-page" data-accent="coral">
+  <a class="skip-link" href="#main-content">跳到正文</a>
+  <aside class="sidebar">
+    <a class="brand" href="main.html"><span class="brand-mark">LC</span><span>Algorithm<br>Guidebook</span></a>
+    <div class="side-label">本册目录</div><nav><details class="side-chapter"><summary><span>复杂度、模拟与枚举</span><small>5</small></summary><div class="side-branch"><a class="side-overview" href="#复杂度模拟与枚举">章节概览</a><details class="side-module"><summary><span>候选空间建模</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#按频次枚举去重子集">按频次枚举去重子集</a><a class="side-algorithm" href="#分组枚举">分组枚举</a></div></details><details class="side-module"><summary><span>大索引定位</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#按贡献分段定位第-k-项">按贡献分段定位第 K 项</a></div></details><details class="side-module"><summary><span>状态模拟</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#显式状态机与边界推进">显式状态机与边界推进</a><a class="side-algorithm" href="#新旧状态隔离">新旧状态隔离</a></div></details></div></details><details class="side-chapter"><summary><span>数组、字符串与哈希表</span><small>3</small></summary><div class="side-branch"><a class="side-overview" href="#数组字符串与哈希表">章节概览</a><details class="side-module"><summary><span>哈希键与频次</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#规范化键分组">规范化键分组</a><a class="side-algorithm" href="#频次统计与排序取-top-k">频次统计与排序取 Top K</a></div></details><details class="side-module"><summary><span>常数空间扫描</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#boyer-moore-多数投票">Boyer-Moore 多数投票</a></div></details></div></details><details class="side-chapter"><summary><span>排序与分治</span><small>3</small></summary><div class="side-branch"><a class="side-overview" href="#排序与分治">章节概览</a><details class="side-module"><summary><span>稳定排序与分治合并</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#归并排序">归并排序</a></div></details><details class="side-module"><summary><span>排序规则设计</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#自定义比较器与排序键">自定义比较器与排序键</a></div></details><details class="side-module"><summary><span>顺序统计量</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#快速选择">快速选择</a></div></details></div></details><details class="side-chapter"><summary><span>离散化与离线处理</span><small>2</small></summary><div class="side-branch"><a class="side-overview" href="#离散化与离线处理">章节概览</a><details class="side-module"><summary><span>值域压缩</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#排序去重离散化">排序去重离散化</a></div></details><details class="side-module"><summary><span>单调事件扫描</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#按阈值离线激活">按阈值离线激活</a></div></details></div></details></nav>
+    <a class="back-map" href="main.html">返回完整思维导图</a>
+  </aside>
+  <main id="main-content" class="reader">
+    <header class="reader-head">
+      <div class="reader-actions"><a href="main.html">思维导图</a><label class="search"><span>搜索本册</span><input type="search" data-search-input placeholder="输入算法或知识点"></label></div>
+      <div class="edition">VOLUME 01</div><h1>分析与基础建模</h1><p>从复杂度和数据表达出发，建立枚举、哈希、有序化与离线处理的基本判断框架。</p>
+      <div class="reader-stats"><span>4 个题型</span><span>13 个典型算法</span></div>
+    </header>
+    <div class="no-results" data-no-results hidden>没有匹配的算法，请尝试更短的关键词。</div>
+    <section class="chapter" id="复杂度模拟与枚举" data-search="复杂度、模拟与枚举"><div class="chapter-index">01</div><h2>复杂度、模拟与枚举</h2><p>先用约束估算允许的候选数量，再决定模拟、直接枚举还是改变枚举对象。复杂度分析不仅要数循环，还要计入排序、哈希、切片、列表中间插入等隐藏成本。</p>
+<h3 id="候选空间建模">候选空间建模</h3>
+<section class="algorithm" data-search="按频次枚举去重子集"><h4 id="按频次枚举去重子集">按频次枚举去重子集<a class="anchor" href="#按频次枚举去重子集" aria-label="定位到 按频次枚举去重子集">#</a></h4>
+<p><strong>解决什么</strong>：输入包含重复元素时，生成所有不同子集；也适合“每种物品可选 $0$ 到若干次”的有限选择模型。</p>
+<p><strong>核心原理</strong>：先统计每个值出现次数。处理值 <code>value</code> 时，对已有每个子集分别追加 $0,1,\ldots,count[value]$ 个该值，从构造方式上消除重复。候选总数仍决定运行时间，无法比输出规模更快。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import Counter
+
+def subsets_with_duplicates(nums):
+  subsets = [[]]
+  for value, frequency in Counter(nums).items():
+    subsets = [
+      subset + [value] * copies
+      for subset in subsets
+      for copies in range(frequency + 1)
+    ]
+  return subsets</code></pre></div>
+<p><strong>复杂度</strong>：若不同值频次为 $c_1,\ldots,c_m$，子集数为 $S=\prod(c_i+1)$；构造结果的时间和输出空间均为 $O(nS)$，辅助状态为 $O(S)$。</p>
+<p><strong>易错点</strong>：不能把含重复元素的每个位置独立选或不选后直接返回，否则会产生重复子集；复杂度应包含复制子集列表的成本。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/subsets-ii/" target="_blank" rel="noreferrer">90. Subsets II</a></p>
+</section>
+<section class="algorithm" data-search="分组枚举"><h4 id="分组枚举">分组枚举<a class="anchor" href="#分组枚举" aria-label="定位到 分组枚举">#</a></h4>
+<p><strong>解决什么</strong>：多组元素组合、四数计数或可拆成两半的等式，使朴素 $O(n^4)$ 枚举降维。</p>
+<p><strong>核心原理</strong>：分别枚举两半的组合结果，用哈希表记录一侧的和及出现次数，再在另一侧查询补数。关键是选择规模接近的分组，避免某一侧状态数过大。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import Counter
+
+def four_sum_count(first, second, third, fourth, target=0):
+  left_sums = Counter(a + b for a in first for b in second)
+  return sum(
+    left_sums[target - c - d]
+    for c in third
+    for d in fourth
+  )</code></pre></div>
+<p><strong>复杂度</strong>：四个数组长度均为 $n$ 时，时间 $O(n^2)$，空间 $O(n^2)$；实际空间取决于不同两数和的数量。</p>
+<p><strong>易错点</strong>：计数题必须保存频次而非只保存集合；不要漏算重复下标组合；若分组规模不均，应让较小状态空间进入哈希表。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/4sum-ii/" target="_blank" rel="noreferrer">454. 4Sum II</a></p>
+</section>
+<h3 id="大索引定位">大索引定位</h3>
+<section class="algorithm" data-search="按贡献分段定位第 k 项"><h4 id="按贡献分段定位第-k-项">按贡献分段定位第 K 项<a class="anchor" href="#按贡献分段定位第-k-项" aria-label="定位到 按贡献分段定位第 K 项">#</a></h4>
+<p><strong>解决什么</strong>：在由数字、区间或重复块拼接成的超长甚至无限序列中定位第 $k$ 项，而 $k$ 大到不能实际生成前缀。</p>
+<p><strong>核心原理</strong>：把结构相同的元素归为一段，先计算整段贡献并不断跳过；目标落入某段后，再用整除和取模定位段内对象及对象内偏移。若块内顺序会周期性翻转，最后只需把逻辑编号映射到实际编号。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def kth_digit_in_positive_integers(k):
+  digits = 1
+  count = 9
+  start = 1
+  while k &gt; digits * count:
+    k -= digits * count
+    digits += 1
+    count *= 10
+    start *= 10
+  number = start + (k - 1) // digits
+  offset = (k - 1) % digits
+  return int(str(number)[offset])</code></pre></div>
+<p><strong>复杂度</strong>：十进制整数串中只需跨过 $O(\log k)$ 个长度段，时间 $O(\log k)$，辅助空间 $O(1)$；最终转成字符串需要 $O(\log k)$ 空间。</p>
+<p><strong>易错点</strong>：先把 1-indexed 的 $k$ 转成段内 0-indexed 偏移可减少整除边界错误；段贡献可能溢出定宽整数；块编号与块内方向是两层映射，不要在跳段时混在一起。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/k-th-digit-in-infinite-string/" target="_blank" rel="noreferrer">4022. K-th Digit in Infinite String</a>：先按数字长度跳段，再根据十个整数一组的奇偶性反射块内编号。</p>
+</section>
+<h3 id="状态模拟">状态模拟</h3>
+<section class="algorithm" data-search="显式状态机与边界推进"><h4 id="显式状态机与边界推进">显式状态机与边界推进<a class="anchor" href="#显式状态机与边界推进" aria-label="定位到 显式状态机与边界推进">#</a></h4>
+<p><strong>解决什么</strong>：按方向移动、分层遍历矩阵、处理带阶段切换的流程模拟。</p>
+<p><strong>核心原理</strong>：把位置、方向、边界和终止条件都写成状态。以螺旋矩阵为例，每走完一条边就收缩对应边界，从而保证每个位置只处理一次。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def spiral_order(matrix):
+  if not matrix or not matrix[0]:
+    return []
+  top, bottom = 0, len(matrix) - 1
+  left, right = 0, len(matrix[0]) - 1
+  answer = []
+  while top &lt;= bottom and left &lt;= right:
+    answer.extend(matrix[top][left:right + 1])
+    top += 1
+    for row in range(top, bottom + 1):
+      answer.append(matrix[row][right])
+    right -= 1
+    if top &lt;= bottom:
+      answer.extend(reversed(matrix[bottom][left:right + 1]))
+      bottom -= 1
+    if left &lt;= right:
+      for row in range(bottom, top - 1, -1):
+        answer.append(matrix[row][left])
+      left += 1
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：$m\times n$ 矩阵的时间为 $O(mn)$；除返回结果外辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：单行或单列矩阵在反向遍历前必须再次检查边界；每轮循环应收缩至少一条边界，防止重复访问或死循环。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/spiral-matrix/" target="_blank" rel="noreferrer">54. Spiral Matrix</a>；本地实现使用方向与访问矩阵，额外空间为 $O(mn)$。</p>
+</section>
+<section class="algorithm" data-search="新旧状态隔离"><h4 id="新旧状态隔离">新旧状态隔离<a class="anchor" href="#新旧状态隔离" aria-label="定位到 新旧状态隔离">#</a></h4>
+<p><strong>解决什么</strong>：所有位置需要基于同一轮旧状态同时更新，例如元胞自动机、棋盘演化和多源扩散的一轮转移。</p>
+<p><strong>核心原理</strong>：读取时只能看到旧状态。最直接的方法是写入副本；若状态值很少，也可用编码同时保存旧值与新值，扫描结束后统一还原。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def update_board(board, transition):
+  rows, cols = len(board), len(board[0])
+  next_board = [[0] * cols for _ in range(rows)]
+  for row in range(rows):
+    for col in range(cols):
+      next_board[row][col] = transition(board, row, col)
+  for row in range(rows):
+    board[row][:] = next_board[row]</code></pre></div>
+<p><strong>复杂度</strong>：$m\times n$ 网格的一轮更新时间 $O(mn)$，副本空间 $O(mn)$；有限状态原地编码可把辅助空间降为 $O(1)$。</p>
+<p><strong>易错点</strong>：边扫描边覆盖会让后面的格子读到新状态；原地编码时，邻居统计必须提取旧状态位；边界邻居不能越界。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/game-of-life/" target="_blank" rel="noreferrer">289. Game of Life</a>；本地实现使用完整下一代副本，并非原地编码。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li><a href="https://leetcode.com/problems/next-greater-numerically-balanced-number/" target="_blank" rel="noreferrer">2048. Next Greater Numerically Balanced Number</a>：Python 本地实现预先列出合法数字组成，再枚举其不同排列。</li></ul>
+</section></section><section class="chapter" id="数组字符串与哈希表" data-search="数组、字符串与哈希表"><div class="chapter-index">02</div><h2>数组、字符串与哈希表</h2><p>数组题先定义下标与已处理区间的不变量；哈希表则要先定义“哪些对象应视为等价”，再把这个等价关系编码成不可变键。</p>
+<h3 id="哈希键与频次">哈希键与频次</h3>
+<section class="algorithm" data-search="规范化键分组"><h4 id="规范化键分组">规范化键分组<a class="anchor" href="#规范化键分组" aria-label="定位到 规范化键分组">#</a></h4>
+<p><strong>解决什么</strong>：按异位词、组成成分或其他等价关系给对象分组。</p>
+<p><strong>核心原理</strong>：把每个对象转换成唯一的规范化键。小写英文字母异位词可以使用长度为 26 的频次数组转成元组；同一键下的原对象加入同一组。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import defaultdict
+
+def group_anagrams(words):
+  groups = defaultdict(list)
+  for word in words:
+    frequency = [0] * 26
+    for char in word:
+      frequency[ord(char) - ord(&quot;a&quot;)] += 1
+    groups[tuple(frequency)].append(word)
+  return list(groups.values())</code></pre></div>
+<p><strong>复杂度</strong>：所有字符串总长度为 $L$ 时，时间 $O(L)$，除返回结果外键空间 $O(26g)$，其中 $g$ 为分组数。</p>
+<p><strong>易错点</strong>：列表不可哈希，必须转成元组；字符集不是固定小写字母时，应改用排序串或排序后的 <code>(字符, 次数)</code> 元组；键必须保留完整等价信息。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/group-anagrams/" target="_blank" rel="noreferrer">49. Group Anagrams</a></p>
+</section>
+<section class="algorithm" data-search="频次统计与排序取 top k"><h4 id="频次统计与排序取-top-k">频次统计与排序取 Top K<a class="anchor" href="#频次统计与排序取-top-k" aria-label="定位到 频次统计与排序取 Top K">#</a></h4>
+<p><strong>解决什么</strong>：寻找出现次数最多的元素、按频率排序或输出高频候选。</p>
+<p><strong>核心原理</strong>：先用哈希表完成一次频次统计，再只对不同元素排序。若只需前 $k$ 个且不同元素很多，可进一步改用大小为 $k$ 的堆或桶排序。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import Counter
+
+def top_k_frequent(nums, k):
+  frequency = Counter(nums)
+  ordered = sorted(frequency, key=frequency.get, reverse=True)
+  return ordered[:k]</code></pre></div>
+<p><strong>复杂度</strong>：设数组长度为 $n$、不同元素数为 $u$，时间 $O(n+u\log u)$，空间 $O(u)$。</p>
+<p><strong>易错点</strong>：排序的是不同元素而非原数组；该模板不满足要求严格优于 $O(n\log n)$ 的最强约束，届时应使用堆或桶；并列频率的输出顺序需按题意处理。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/top-k-frequent-elements/" target="_blank" rel="noreferrer">347. Top K Frequent Elements</a>，本地实现正是频次表加全排序。</p>
+</section>
+<h3 id="常数空间扫描">常数空间扫描</h3>
+<section class="algorithm" data-search="boyer-moore 多数投票"><h4 id="boyer-moore-多数投票">Boyer-Moore 多数投票<a class="anchor" href="#boyer-moore-多数投票" aria-label="定位到 Boyer-Moore 多数投票">#</a></h4>
+<p><strong>解决什么</strong>：在线性时间、常数空间内寻找出现次数超过一半的元素。</p>
+<p><strong>核心原理</strong>：不同元素两两抵消。严格多数元素比其余所有元素总数还多，因此抵消结束后必然成为候选；若题目不保证多数元素存在，还需第二次扫描验证。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def majority_element(nums):
+  candidate = None
+  votes = 0
+  for value in nums:
+    if votes == 0:
+      candidate = value
+    votes += 1 if value == candidate else -1
+  return candidate</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，辅助空间 $O(1)$；需要验证时仍为 $O(n)$ 时间。</p>
+<p><strong>易错点</strong>：投票结果只是候选，只有题目保证多数存在时才能直接返回；“超过一半”与“出现次数最多”不是同一条件；扩展到超过 $n/3$ 时需维护两个候选。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/majority-element/" target="_blank" rel="noreferrer">169. Majority Element</a></p>
+<p><strong>补充练习</strong>：</p>
+<ul><li><a href="https://leetcode.com/problems/longest-consecutive-sequence/" target="_blank" rel="noreferrer">128. Longest Consecutive Sequence</a>：Python 本地实现是以字典存父节点的并查集，不是经典哈希集合起点扩展法。</li><li><a href="https://leetcode.com/problems/4sum-ii/" target="_blank" rel="noreferrer">454. 4Sum II</a>：分组枚举与补数频次，主讲见上一章。</li><li><a href="https://leetcode.com/problems/design-hashmap/" target="_blank" rel="noreferrer">706. Design HashMap</a>：Python 本地文件直接包装内置 <code>dict</code>，不是桶与冲突处理的手写哈希表。</li><li><a href="https://leetcode.com/problems/longest-balanced-subarray-i/" target="_blank" rel="noreferrer">3719. Longest Balanced Subarray I</a>：集合频次与区间枚举。</li></ul>
+</section></section><section class="chapter" id="排序与分治" data-search="排序与分治"><div class="chapter-index">03</div><h2>排序与分治</h2><p>排序先建立全局次序，分治则把问题拆成独立子问题后合并答案。只需第 $k$ 个元素时优先选择而非完整排序；链表和需要统计跨区间贡献时，归并通常更自然。</p>
+<h3 id="稳定排序与分治合并">稳定排序与分治合并</h3>
+<section class="algorithm" data-search="归并排序"><h4 id="归并排序">归并排序<a class="anchor" href="#归并排序" aria-label="定位到 归并排序">#</a></h4>
+<p><strong>解决什么</strong>：稳定排序数组或链表，并为逆序对、跨区间贡献等问题提供有序的左右半区间。</p>
+<p><strong>核心原理</strong>：递归排序左右两半，再用双指针线性合并。每层合并总工作量为 $O(n)$，递归深度为 $O(\log n)$。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def merge_sort(nums):
+  if len(nums) &lt;= 1:
+    return nums
+  middle = len(nums) // 2
+  left = merge_sort(nums[:middle])
+  right = merge_sort(nums[middle:])
+  result = []
+  i = j = 0
+  while i &lt; len(left) and j &lt; len(right):
+    if left[i] &lt;= right[j]:
+      result.append(left[i])
+      i += 1
+    else:
+      result.append(right[j])
+      j += 1
+  return result + left[i:] + right[j:]</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n\log n)$；该数组模板空间 $O(n)$，递归栈 $O(\log n)$。</p>
+<p><strong>易错点</strong>：稳定排序要求相等时先取左侧；链表找中点时要正确断链；统计逆序对时只在右侧元素严格更小时累加剩余左侧数量。</p>
+<p><strong>对应例题</strong>：Python 对照实现：<a href="https://leetcode.com/problems/sort-list/" target="_blank" rel="noreferrer">148. Sort List</a> 当前将链表值复制到数组后调用 <code>sorted</code>，可作为改写链表归并排序的练习，并非归并模板实证。</p>
+</section>
+<h3 id="排序规则设计">排序规则设计</h3>
+<section class="algorithm" data-search="自定义比较器与排序键"><h4 id="自定义比较器与排序键">自定义比较器与排序键<a class="anchor" href="#自定义比较器与排序键" aria-label="定位到 自定义比较器与排序键">#</a></h4>
+<p><strong>解决什么</strong>：元素的优先级不能由单个自然值表达，例如拼接后最大、按频率排序或按多个关键字配对。</p>
+<p><strong>核心原理</strong>：先写清第一关键字和并列规则。无法用元组键表示时，用比较器定义任意两个元素的相对次序，并保证比较关系自洽。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from functools import cmp_to_key
+
+def largest_concatenation(nums):
+  words = list(map(str, nums))
+
+  def compare(first, second):
+    if first + second &gt; second + first:
+      return -1
+    if first + second &lt; second + first:
+      return 1
+    return 0
+
+  answer = &quot;&quot;.join(sorted(words, key=cmp_to_key(compare)))
+  return &quot;0&quot; if answer[0] == &quot;0&quot; else answer</code></pre></div>
+<p><strong>复杂度</strong>：排序进行 $O(n\log n)$ 次比较；若字符串平均长度为 $m$，时间为 $O(nm\log n)$，额外空间 $O(nm)$。</p>
+<p><strong>易错点</strong>：比较器必须返回负数、零或正数；不要写出循环矛盾；多关键字排序要明确升降序；全零拼接结果应规范为单个 <code>0</code>。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/largest-number/" target="_blank" rel="noreferrer">179. Largest Number</a></p>
+</section>
+<h3 id="顺序统计量">顺序统计量</h3>
+<section class="algorithm" data-search="快速选择"><h4 id="快速选择">快速选择<a class="anchor" href="#快速选择" aria-label="定位到 快速选择">#</a></h4>
+<p><strong>解决什么</strong>：只求第 $k$ 小或第 $k$ 大元素，不需要得到完整有序数组。</p>
+<p><strong>核心原理</strong>：随机选枢轴并原地分区，只继续处理目标下标所在的一侧；与快速排序不同，不递归另一侧。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from random import randint
+
+def kth_smallest(nums, k):
+  target = k - 1
+  left, right = 0, len(nums) - 1
+  while left &lt;= right:
+    pivot_index = randint(left, right)
+    nums[pivot_index], nums[right] = nums[right], nums[pivot_index]
+    store = left
+    for index in range(left, right):
+      if nums[index] &lt; nums[right]:
+        nums[store], nums[index] = nums[index], nums[store]
+        store += 1
+    nums[store], nums[right] = nums[right], nums[store]
+    if store == target:
+      return nums[store]
+    if store &lt; target:
+      left = store + 1
+    else:
+      right = store - 1</code></pre></div>
+<p><strong>复杂度</strong>：期望时间 $O(n)$，最坏时间 $O(n^2)$；迭代模板额外空间 $O(1)$。</p>
+<p><strong>易错点</strong>：第 $k$ 大对应升序下标 <code>n - k</code>；分区后只能缩到不含枢轴的一侧；随机化降低恶意有序输入触发最坏情况的概率。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noreferrer">215. Kth Largest Element in an Array</a>；本地源码使用完整快速排序，并非快速选择实证。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/sort-characters-by-frequency/" target="_blank" rel="noreferrer">451. Sort Characters By Frequency</a></li><li>Python 实证：<a href="https://leetcode.com/problems/minimum-total-price-after-applying-discounts/" target="_blank" rel="noreferrer">4014. Minimum Total Price After Applying Discounts</a>：排序配对与交换论证。</li></ul>
+</section></section><section class="chapter" id="离散化与离线处理" data-search="离散化与离线处理"><div class="chapter-index">04</div><h2>离散化与离线处理</h2><p>离散化压缩值域但保留次序；离线处理则改变查询顺序，把反复变化的条件变成单向扫描。两者常与并查集、堆、树状数组或线段树组合。</p>
+<h3 id="值域压缩">值域压缩</h3>
+<section class="algorithm" data-search="排序去重离散化"><h4 id="排序去重离散化">排序去重离散化<a class="anchor" href="#排序去重离散化" aria-label="定位到 排序去重离散化">#</a></h4>
+<p><strong>解决什么</strong>：坐标很大或为负数，但算法只关心相对大小、排名或实际出现的位置。</p>
+<p><strong>核心原理</strong>：将所有可能参与操作的坐标排序去重，原值映射为连续排名；需要恢复原值时保留反向数组。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def compress(values):
+  ordered = sorted(set(values))
+  rank = {value: index + 1 for index, value in enumerate(ordered)}
+  return [rank[value] for value in values], ordered</code></pre></div>
+<p><strong>复杂度</strong>：预处理时间 $O(n\log n)$，空间 $O(n)$；哈希映射单次期望 $O(1)$。</p>
+<p><strong>易错点</strong>：离散化只保留顺序，不保留原坐标距离；区间端点、查询值和更新值要一起收集；树状数组通常使用从 <code>1</code> 开始的排名。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/closest-room/" target="_blank" rel="noreferrer">1847. Closest Room</a>：离线激活后维护房间编号候选；本地实现使用 <code>bisect + list</code>，中间插入仍为 $O(n)$。</p>
+</section>
+<h3 id="单调事件扫描">单调事件扫描</h3>
+<section class="algorithm" data-search="按阈值离线激活"><h4 id="按阈值离线激活">按阈值离线激活<a class="anchor" href="#按阈值离线激活" aria-label="定位到 按阈值离线激活">#</a></h4>
+<p><strong>解决什么</strong>：多个独立查询各有阈值，满足条件的元素可随阈值单调加入，且允许改变查询处理顺序。</p>
+<p><strong>核心原理</strong>：数据和查询分别按阈值排序；扫描查询时持续激活新数据，用数据结构回答当前查询，最后按原下标恢复答案。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def offline_threshold(items, queries, activate, answer):
+  items = sorted(items, key=lambda item: item[0])
+  ordered_queries = sorted(enumerate(queries), key=lambda pair: pair[1][0])
+  result = [None] * len(queries)
+  item_index = 0
+  for query_index, query in ordered_queries:
+    threshold = query[0]
+    while item_index &lt; len(items) and items[item_index][0] &lt; threshold:
+      activate(items[item_index])
+      item_index += 1
+    result[query_index] = answer(query)
+  return result</code></pre></div>
+<p><strong>复杂度</strong>：排序时间 $O((n+q)\log(n+q))$；扫描和数据结构操作另计，常见总复杂度为 $O((n+q)\log n)$。</p>
+<p><strong>易错点</strong>：严格小于与小于等于决定同阈值事件的先后；必须保存查询原下标；查询影响后续输入时不能离线重排。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/checking-existence-of-edge-length-limited-paths/" target="_blank" rel="noreferrer">1697. Checking Existence of Edge Length Limited Paths</a>：按边权激活边，并用并查集回答连通性。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/minimum-interval-to-include-each-query/" target="_blank" rel="noreferrer">1851. Minimum Interval to Include Each Query</a>：查询排序、区间激活与堆维护候选。</li></ul>
+</section></section>
+    <nav class="pager" aria-label="分册导航"><span></span><a class="next" href="02-linear-and-interval.html"><small>下一册</small><strong>线性与区间技巧</strong></a></nav>
+  </main>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script defer src="assets/app.js"></script>
+</body>
+</html>

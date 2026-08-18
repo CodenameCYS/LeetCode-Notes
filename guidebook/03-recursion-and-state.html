@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="从递归契约到状态转移，覆盖链式结构、树、搜索、动态规划与贪心证明。">
+  <title>递归与状态搜索 · LeetCode Guidebook</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body class="reader-page" data-accent="jade">
+  <a class="skip-link" href="#main-content">跳到正文</a>
+  <aside class="sidebar">
+    <a class="brand" href="main.html"><span class="brand-mark">LC</span><span>Algorithm<br>Guidebook</span></a>
+    <div class="side-label">本册目录</div><nav><details class="side-chapter"><summary><span>链表</span><small>5</small></summary><div class="side-branch"><a class="side-overview" href="#链表">章节概览</a><details class="side-module"><summary><span>指针重连</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#虚拟头节点与区间反转">虚拟头节点与区间反转</a><a class="side-algorithm" href="#成环后断链">成环后断链</a></div></details><details class="side-module"><summary><span>结构定位与复制</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#快慢指针找中点">快慢指针找中点</a><a class="side-algorithm" href="#哈希映射复制复杂链表">哈希映射复制复杂链表</a></div></details><details class="side-module"><summary><span>排序与合并</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#链表归并排序">链表归并排序</a></div></details></div></details><details class="side-chapter"><summary><span>二叉树与树形递归</span><small>8</small></summary><div class="side-branch"><a class="side-overview" href="#二叉树与树形递归">章节概览</a><details class="side-module"><summary><span>树的遍历与递归契约</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#前序中序与后序-dfs">前序、中序与后序 DFS</a><a class="side-algorithm" href="#层序-bfs">层序 BFS</a></div></details><details class="side-module"><summary><span>二叉搜索树</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#中序有序性与-bst-操作">中序有序性与 BST 操作</a></div></details><details class="side-module"><summary><span>树形 DP</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#后序状态合并">后序状态合并</a></div></details><details class="side-module"><summary><span>最近公共祖先 LCA</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#二叉树后序递归-lca">二叉树后序递归 LCA</a><a class="side-algorithm" href="#最深叶节点集合的-lca">最深叶节点集合的 LCA</a></div></details><details class="side-module"><summary><span>倍增与 Binary Lifting</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#第-k-个祖先">第 K 个祖先</a><a class="side-algorithm" href="#倍增-lca">倍增 LCA</a></div></details></div></details><details class="side-chapter"><summary><span>DFS 与 BFS</span><small>3</small></summary><div class="side-branch"><a class="side-overview" href="#dfs-与-bfs">章节概览</a><details class="side-module"><summary><span>网格与连通块</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#网格-dfs-flood-fill">网格 DFS / Flood Fill</a></div></details><details class="side-module"><summary><span>同步扩散</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#多源-bfs">多源 BFS</a></div></details><details class="side-module"><summary><span>隐式状态图</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#状态图-bfs">状态图 BFS</a></div></details></div></details><details class="side-chapter"><summary><span>回溯与搜索剪枝</span><small>3</small></summary><div class="side-branch"><a class="side-overview" href="#回溯与搜索剪枝">章节概览</a><details class="side-module"><summary><span>选择路径</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#选择递归与撤销">选择、递归与撤销</a></div></details><details class="side-module"><summary><span>重复候选</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#排序与同层去重">排序与同层去重</a></div></details><details class="side-module"><summary><span>可行性边界</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#上下界与对称性剪枝">上下界与对称性剪枝</a></div></details></div></details><details class="side-chapter"><summary><span>动态规划</span><small>6</small></summary><div class="side-branch"><a class="side-overview" href="#动态规划">章节概览</a><details class="side-module"><summary><span>一维依赖</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#线性-dp-与滚动状态">线性 DP 与滚动状态</a></div></details><details class="side-module"><summary><span>容量选择</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#0-1-背包与完全背包">0-1 背包与完全背包</a></div></details><details class="side-module"><summary><span>序列对齐</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#双序列-dp">双序列 DP</a></div></details><details class="side-module"><summary><span>区间合并</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#区间-dp">区间 DP</a></div></details><details class="side-module"><summary><span>线性区间扩张</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#从起点向两端扩张">从起点向两端扩张</a></div></details><details class="side-module"><summary><span>子集状态</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#状态压缩-dp">状态压缩 DP</a></div></details></div></details><details class="side-chapter"><summary><span>贪心</span><small>5</small></summary><div class="side-branch"><a class="side-overview" href="#贪心">章节概览</a><details class="side-module"><summary><span>区间选择</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#最早结束时间贪心">最早结束时间贪心</a></div></details><details class="side-module"><summary><span>排序配对</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#同序配对与交换论证">同序配对与交换论证</a></div></details><details class="side-module"><summary><span>候选支配</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#保留支配候选">保留支配候选</a></div></details><details class="side-module"><summary><span>连续覆盖</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#当前可达范围内延伸最远">当前可达范围内延伸最远</a></div></details><details class="side-module"><summary><span>局部贡献</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#峰谷替换与正增量累加">峰谷替换与正增量累加</a></div></details></div></details></nav>
+    <a class="back-map" href="main.html">返回完整思维导图</a>
+  </aside>
+  <main id="main-content" class="reader">
+    <header class="reader-head">
+      <div class="reader-actions"><a href="main.html">思维导图</a><label class="search"><span>搜索本册</span><input type="search" data-search-input placeholder="输入算法或知识点"></label></div>
+      <div class="edition">VOLUME 03</div><h1>递归与状态搜索</h1><p>从递归契约到状态转移，覆盖链式结构、树、搜索、动态规划与贪心证明。</p>
+      <div class="reader-stats"><span>6 个题型</span><span>30 个典型算法</span></div>
+    </header>
+    <div class="no-results" data-no-results hidden>没有匹配的算法，请尝试更短的关键词。</div>
+    <section class="chapter" id="链表" data-search="链表"><div class="chapter-index">01</div><h2>链表</h2><h3 id="指针重连">指针重连</h3>
+<section class="algorithm" data-search="虚拟头节点与区间反转"><h4 id="虚拟头节点与区间反转">虚拟头节点与区间反转<a class="anchor" href="#虚拟头节点与区间反转" aria-label="定位到 虚拟头节点与区间反转">#</a></h4>
+<p><strong>解决什么</strong>：删除或插入头节点、反转整条链表或区间，以及需要统一处理首节点边界的链表修改。</p>
+<p><strong>核心原理</strong>：虚拟头节点让真实头节点也拥有前驱。反转时先保存 <code>current.next</code>，再修改指向；区间反转额外保存区间前驱和后继，最后一次性接回。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def reverse_between(head, left, right):
+  dummy = ListNode(0, head)
+  before = dummy
+  for _ in range(left - 1):
+    before = before.next
+  current = before.next
+  for _ in range(right - left):
+    moved = current.next
+    current.next = moved.next
+    moved.next = before.next
+    before.next = moved
+  return dummy.next</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，额外空间 $O(1)$。</p>
+<p><strong>易错点</strong>：改写 <code>next</code> 前必须保存后继；循环次数是 <code>right - left</code>；返回 <code>dummy.next</code> 而不是原 <code>head</code>。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/reverse-linked-list-ii/" target="_blank" rel="noreferrer">92. Reverse Linked List II</a>、<a href="https://leetcode.com/problems/reverse-linked-list/" target="_blank" rel="noreferrer">206. Reverse Linked List</a></p>
+</section>
+<section class="algorithm" data-search="成环后断链"><h4 id="成环后断链">成环后断链<a class="anchor" href="#成环后断链" aria-label="定位到 成环后断链">#</a></h4>
+<p><strong>解决什么</strong>：把链表向右轮转 $k$ 位，或把首尾关系转换成更容易定位的切分问题。</p>
+<p><strong>核心原理</strong>：先求长度并把尾节点连到头节点形成环，令 $k\mathrel{\%=}n$，再从尾节点向前走 $n-k$ 步找到新尾并断开。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def rotate_right(head, k):
+  if head is None or head.next is None:
+    return head
+  tail, length = head, 1
+  while tail.next:
+    tail = tail.next
+    length += 1
+  tail.next = head
+  for _ in range(length - k % length):
+    tail = tail.next
+  answer = tail.next
+  tail.next = None
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，额外空间 $O(1)$。</p>
+<p><strong>易错点</strong>：空链表不能取模；必须先对 $k$ 取模；断环位置是新尾节点之后。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/rotate-list/" target="_blank" rel="noreferrer">61. Rotate List</a></p>
+</section>
+<h3 id="结构定位与复制">结构定位与复制</h3>
+<section class="algorithm" data-search="快慢指针找中点"><h4 id="快慢指针找中点">快慢指针找中点<a class="anchor" href="#快慢指针找中点" aria-label="定位到 快慢指针找中点">#</a></h4>
+<p><strong>解决什么</strong>：找链表中点、判断回文，或把链表拆成长度接近的两段。</p>
+<p><strong>核心原理</strong>：快指针每次走两步、慢指针每次走一步；快指针到尾部时，慢指针位于中点。回文判断可反转后半段并与前半段逐项比较。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def middle_node(head):
+  slow = fast = head
+  while fast and fast.next:
+    slow = slow.next
+    fast = fast.next.next
+  return slow</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，额外空间 $O(1)$。</p>
+<p><strong>易错点</strong>：偶数长度时模板返回第二个中点；若要切断前半段，应保存 <code>slow</code> 的前驱；回文比较后是否恢复链表取决于接口约定。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/palindrome-linked-list/" target="_blank" rel="noreferrer">234. Palindrome Linked List</a></p>
+</section>
+<section class="algorithm" data-search="哈希映射复制复杂链表"><h4 id="哈希映射复制复杂链表">哈希映射复制复杂链表<a class="anchor" href="#哈希映射复制复杂链表" aria-label="定位到 哈希映射复制复杂链表">#</a></h4>
+<p><strong>解决什么</strong>：复制同时含 <code>next</code> 与随机指针的链表，保证新节点之间的引用不指回原链表。</p>
+<p><strong>核心原理</strong>：第一遍为每个原节点建立副本，第二遍通过 <code>copies[old.next]</code> 和 <code>copies[old.random]</code> 重建边；给 <code>None</code> 预置映射可统一边界。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def copy_random_list(head):
+  copies = {None: None}
+  current = head
+  while current:
+    copies[current] = Node(current.val)
+    current = current.next
+  current = head
+  while current:
+    copies[current].next = copies[current.next]
+    copies[current].random = copies[current.random]
+    current = current.next
+  return copies[head]</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，额外空间 $O(n)$。</p>
+<p><strong>易错点</strong>：字典键必须是节点对象而不是可能重复的节点值；必须创建完全部副本后再连随机指针。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/copy-list-with-random-pointer/" target="_blank" rel="noreferrer">138. Copy List with Random Pointer</a></p>
+</section>
+<h3 id="排序与合并">排序与合并</h3>
+<section class="algorithm" data-search="链表归并排序"><h4 id="链表归并排序">链表归并排序<a class="anchor" href="#链表归并排序" aria-label="定位到 链表归并排序">#</a></h4>
+<p><strong>解决什么</strong>：在不能随机访问的链表上实现稳定的 $O(n\log n)$ 排序。</p>
+<p><strong>核心原理</strong>：快慢指针切分链表，递归排序左右两半，再用虚拟头节点线性合并。该算法是标准链表排序模板，但本地 148 源码实际把值复制到数组排序后写回，并非此实现。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def sort_list(head):
+  if head is None or head.next is None:
+    return head
+  slow, fast = head, head.next
+  while fast and fast.next:
+    slow, fast = slow.next, fast.next.next
+  right = slow.next
+  slow.next = None
+  return merge(sort_list(head), sort_list(right))
+
+def merge(first, second):
+  dummy = tail = ListNode()
+  while first and second:
+    if first.val &lt;= second.val:
+      tail.next, first = first, first.next
+    else:
+      tail.next, second = second, second.next
+    tail = tail.next
+  tail.next = first or second
+  return dummy.next</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n\log n)$；递归栈 $O(\log n)$，自底向上版本可把额外栈空间降为 $O(1)$。</p>
+<p><strong>易错点</strong>：切分前必须断开左半段；合并后要接上剩余节点；若题目严格要求常数额外空间，应改用自底向上归并。</p>
+<p><strong>对应例题</strong>：Python 对照实现：<a href="https://leetcode.com/problems/sort-list/" target="_blank" rel="noreferrer">148. Sort List</a> 当前使用数组排序并回写节点值，时间 $O(n\log n)$、额外空间 $O(n)$，不是链表归并实证。</p>
+</section></section><section class="chapter" id="二叉树与树形递归" data-search="二叉树与树形递归"><div class="chapter-index">02</div><h2>二叉树与树形递归</h2><p>树题的统一视角是：把整棵树的问题定义为“一个节点从子树接收什么信息、向父节点返回什么信息”。先写清递归契约，再选择前序、后序、中序或层序，通常比记忆题型模板更可靠。</p>
+<h3 id="树的遍历与递归契约">树的遍历与递归契约</h3>
+<section class="algorithm" data-search="前序、中序与后序 dfs"><h4 id="前序中序与后序-dfs">前序、中序与后序 DFS<a class="anchor" href="#前序中序与后序-dfs" aria-label="定位到 前序、中序与后序 DFS">#</a></h4>
+<p><strong>解决什么</strong>：前序遍历适合把路径、深度等状态从父节点传给子节点；中序遍历可以利用 BST 的有序性；后序遍历适合先取得左右子树结果，再计算当前节点答案。</p>
+<p><strong>核心原理</strong>：三种遍历的区别只是“处理当前节点”相对于左右子树递归的位置。递归函数应明确输入、返回值和副作用，例如 <code>dfs(node) -&gt; 子树高度</code>，不要让返回值同时承担全局答案。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def preorder(node):
+	if node is None:
+		return
+	visit(node)
+	preorder(node.left)
+	preorder(node.right)
+
+def inorder(node):
+	if node is None:
+		return
+	inorder(node.left)
+	visit(node)
+	inorder(node.right)
+
+def postorder(node):
+	if node is None:
+		return
+	postorder(node.left)
+	postorder(node.right)
+	visit(node)</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$；递归栈为 $O(h)$，其中 $h$ 是树高，退化树最坏为 $O(n)$。</p>
+<p><strong>易错点</strong>：Python 递归深度默认有限，长链形树应改用显式栈；前序 + 中序重建通常要求节点值唯一；递归前必须定义空节点返回什么。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/recover-binary-search-tree/" target="_blank" rel="noreferrer">99. Recover Binary Search Tree</a></li><li>C++ 历史实现：<a href="https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/" target="_blank" rel="noreferrer">105. Construct Binary Tree from Preorder and Inorder Traversal</a></li></ul>
+</section>
+<section class="algorithm" data-search="层序 bfs"><h4 id="层序-bfs">层序 BFS<a class="anchor" href="#层序-bfs" aria-label="定位到 层序 BFS">#</a></h4>
+<p><strong>解决什么</strong>：按深度访问节点、求最短层数、连接同层节点或逐层聚合结果。</p>
+<p><strong>核心原理</strong>：队列中始终保存下一批待处理节点。每轮先记录当前队列长度，只弹出这一层的节点，再把下一层加入队尾。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import deque
+
+def level_order(root):
+	if root is None:
+		return []
+	queue = deque([root])
+	answer = []
+	while queue:
+		level = []
+		for _ in range(len(queue)):
+			node = queue.popleft()
+			level.append(node.val)
+			if node.left:
+				queue.append(node.left)
+			if node.right:
+				queue.append(node.right)
+		answer.append(level)
+	return answer</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$；队列空间最坏为树的最大宽度 $O(n)$。</p>
+<p><strong>易错点</strong>：必须在处理本层前固定 <code>len(queue)</code>；Python 使用 <code>deque.popleft()</code>，不要使用列表 <code>pop(0)</code>。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/binary-tree-level-order-traversal/" target="_blank" rel="noreferrer">102. Binary Tree Level Order Traversal</a></p>
+</section>
+<h3 id="二叉搜索树">二叉搜索树</h3>
+<section class="algorithm" data-search="中序有序性与 bst 操作"><h4 id="中序有序性与-bst-操作">中序有序性与 BST 操作<a class="anchor" href="#中序有序性与-bst-操作" aria-label="定位到 中序有序性与 BST 操作">#</a></h4>
+<p><strong>解决什么</strong>：在 BST 中查找、插入、删除、验证顺序、寻找第 $k$ 小元素或修复错位节点。</p>
+<p><strong>核心原理</strong>：若 BST 约定左子树严格小于节点、右子树严格大于节点，则中序遍历得到严格递增序列。搜索时比较目标值与当前值，每次只进入一棵子树。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def search_bst(root, target):
+	node = root
+	while node:
+		if node.val == target:
+			return node
+		node = node.left if target &lt; node.val else node.right
+	return None</code></pre></div>
+<p><strong>复杂度</strong>：搜索、插入和删除均为 $O(h)$；平衡树中为 $O(\log n)$，退化树中为 $O(n)$。</p>
+<p><strong>易错点</strong>：题目允许重复键时必须明确相等值放左边还是右边；验证 BST 不能只比较父子节点，应传递整个祖先范围。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/recover-binary-search-tree/" target="_blank" rel="noreferrer">99. Recover Binary Search Tree</a></li><li>C++ 历史实现：<a href="https://leetcode.com/problems/kth-smallest-element-in-a-bst/" target="_blank" rel="noreferrer">230. Kth Smallest Element in a BST</a></li></ul>
+</section>
+<h3 id="树形-dp">树形 DP</h3>
+<section class="algorithm" data-search="后序状态合并"><h4 id="后序状态合并">后序状态合并<a class="anchor" href="#后序状态合并" aria-label="定位到 后序状态合并">#</a></h4>
+<p><strong>解决什么</strong>：树上路径、选或不选、安装设备、子树贡献等需要汇总子树状态的问题。</p>
+<p><strong>核心原理</strong>：为每个节点设计一个规模固定的返回状态，再由左右子节点状态合并。以“打家劫舍 III”为例，返回 <code>(不选当前节点, 选择当前节点)</code>：</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def rob_tree(root):
+	def dfs(node):
+		if node is None:
+			return 0, 0
+		left_skip, left_take = dfs(node.left)
+		right_skip, right_take = dfs(node.right)
+		skip = max(left_skip, left_take) + max(right_skip, right_take)
+		take = node.val + left_skip + right_skip
+		return skip, take
+
+	return max(dfs(root))</code></pre></div>
+<p><strong>复杂度</strong>：通常时间 $O(n)$、递归栈 $O(h)$；每个节点的状态数若为 $k$，合并成本还需乘以状态转移复杂度。</p>
+<p><strong>易错点</strong>：区分“可以向父节点延伸的值”和“当前子树内的全局最优值”；不要让父节点读取已经混入兄弟子树的信息。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li><a href="https://leetcode.com/problems/binary-tree-maximum-path-sum/" target="_blank" rel="noreferrer">124. Binary Tree Maximum Path Sum</a>：向上贡献与全局路径答案</li><li><a href="https://leetcode.com/problems/house-robber-iii/" target="_blank" rel="noreferrer">337. House Robber III</a>：选 / 不选状态</li><li><a href="https://leetcode.com/problems/binary-tree-cameras/" target="_blank" rel="noreferrer">968. Binary Tree Cameras</a>：多状态覆盖</li></ul>
+</section>
+<h3 id="最近公共祖先-lca">最近公共祖先 LCA</h3>
+<section class="algorithm" data-search="二叉树后序递归 lca"><h4 id="二叉树后序递归-lca">二叉树后序递归 LCA<a class="anchor" href="#二叉树后序递归-lca" aria-label="定位到 二叉树后序递归 LCA">#</a></h4>
+<p><strong>解决什么</strong>：在普通二叉树中寻找两个节点最深的公共祖先，适合单次或少量查询。</p>
+<p><strong>核心原理</strong>：<code>dfs(node)</code> 返回当前子树中找到的目标节点或它们的 LCA。若左右子树都返回非空，说明两个目标分居两侧，当前节点就是 LCA；若只有一侧非空，直接向上传递。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def lowest_common_ancestor(root, first, second):
+	if root is None or root is first or root is second:
+		return root
+	left = lowest_common_ancestor(root.left, first, second)
+	right = lowest_common_ancestor(root.right, first, second)
+	if left is not None and right is not None:
+		return root
+	return left if left is not None else right</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$；递归栈 $O(h)$。</p>
+<p><strong>易错点</strong>：该简洁模板通常默认两个目标都存在；若题目不保证存在，需要额外统计找到的目标数。比较节点应使用对象身份，而不是仅比较可能重复的节点值。</p>
+<p><strong>对应例题</strong>：Python 标准实现：<a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/" target="_blank" rel="noreferrer">236. Lowest Common Ancestor of a Binary Tree</a></p>
+</section>
+<section class="algorithm" data-search="最深叶节点集合的 lca"><h4 id="最深叶节点集合的-lca">最深叶节点集合的 LCA<a class="anchor" href="#最深叶节点集合的-lca" aria-label="定位到 最深叶节点集合的 LCA">#</a></h4>
+<p><strong>解决什么</strong>：目标不是预先给定的两个节点，而是所有最深叶节点的公共祖先。</p>
+<p><strong>核心原理</strong>：后序返回 <code>(子树最大深度, 对应 LCA)</code>。左右深度相等时当前节点是两侧最深叶的汇合点；否则继承更深一侧的候选。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def lca_deepest_leaves(root):
+  def dfs(node):
+    if node is None:
+      return 0, None
+    left_depth, left_lca = dfs(node.left)
+    right_depth, right_lca = dfs(node.right)
+    if left_depth == right_depth:
+      return left_depth + 1, node
+    if left_depth &gt; right_depth:
+      return left_depth + 1, left_lca
+    return right_depth + 1, right_lca
+
+  return dfs(root)[1]</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$；递归栈 $O(h)$。</p>
+<p><strong>易错点</strong>：它与通用 <code>LCA(u, v)</code> 的查询模型不同，不应共用同一个模板标签。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/lowest-common-ancestor-of-deepest-leaves/" target="_blank" rel="noreferrer">1123. Lowest Common Ancestor of Deepest Leaves</a></p>
+</section>
+<h3 id="倍增与-binary-lifting">倍增与 Binary Lifting</h3>
+<section class="algorithm" data-search="第 k 个祖先"><h4 id="第-k-个祖先">第 K 个祖先<a class="anchor" href="#第-k-个祖先" aria-label="定位到 第 K 个祖先">#</a></h4>
+<p><strong>解决什么</strong>：静态树上大量“向上跳 $k$ 步”查询，也是倍增 LCA 的基础。</p>
+<p><strong>核心原理</strong>：预处理 <code>up[bit][node]</code> 表示节点的 $2^{bit}$ 级祖先。查询时把 $k$ 按二进制拆分，只执行置位对应的跳跃。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>class BinaryLifting:
+	def __init__(self, parent):
+		self.levels = max(1, len(parent).bit_length())
+		self.up = [parent[:]]
+		for _ in range(1, self.levels):
+			previous = self.up[-1]
+			self.up.append([
+				-1 if ancestor == -1 else previous[ancestor]
+				for ancestor in previous
+			])
+
+	def kth_ancestor(self, node, steps):
+		bit = 0
+		while steps and node != -1:
+			if steps &amp; 1:
+				if bit &gt;= self.levels:
+					return -1
+				node = self.up[bit][node]
+			steps &gt;&gt;= 1
+			bit += 1
+		return node</code></pre></div>
+<p><strong>复杂度</strong>：预处理时间和空间均为 $O(n\log n)$；单次查询 $O(\log n)$。</p>
+<p><strong>易错点</strong>：层数应由 <code>n.bit_length()</code> 动态计算；祖先不存在时保持 <code>-1</code>，不能继续把它当数组下标；根节点的父亲定义要统一。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/kth-ancestor-of-a-tree-node/" target="_blank" rel="noreferrer">1483. Kth Ancestor of a Tree Node</a></p>
+</section>
+<section class="algorithm" data-search="倍增 lca"><h4 id="倍增-lca">倍增 LCA<a class="anchor" href="#倍增-lca" aria-label="定位到 倍增 LCA">#</a></h4>
+<p><strong>解决什么</strong>：静态树上大量 LCA 或路径长度查询。</p>
+<p><strong>核心原理</strong>：先把较深节点提升到相同深度；若两点尚未相同，再从最高位到最低位同步上跳到“祖先不同但父祖先相同”的位置，最后返回共同父节点。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def lowest_common_ancestor(first, second, depth, up):
+  if depth[first] &lt; depth[second]:
+    first, second = second, first
+
+  difference = depth[first] - depth[second]
+  for bit in range(len(up)):
+    if difference &gt;&gt; bit &amp; 1:
+      first = up[bit][first]
+
+  if first == second:
+    return first
+
+  for bit in range(len(up) - 1, -1, -1):
+    if up[bit][first] != up[bit][second]:
+      first = up[bit][first]
+      second = up[bit][second]
+  return up[0][first]</code></pre></div>
+<p><strong>复杂度</strong>：预处理 $O(n\log n)$；每次查询 $O(\log n)$；空间 $O(n\log n)$。</p>
+<p><strong>易错点</strong>：建表前必须确定树根和深度；同步上跳时只在两者的 $2^j$ 祖先不同且有效时移动；森林需要分别处理连通分量。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/minimum-weighted-subgraph-with-the-required-paths-ii/" target="_blank" rel="noreferrer">3553. Minimum Weighted Subgraph With the Required Paths II</a></li><li>Python 实证：<a href="https://leetcode.com/problems/number-of-ways-to-assign-edge-weights-ii/" target="_blank" rel="noreferrer">3559. Number of Ways to Assign Edge Weights II</a></li></ul>
+</section></section><section class="chapter" id="dfs-与-bfs" data-search="dfs 与 bfs"><div class="chapter-index">03</div><h2>DFS 与 BFS</h2><h3 id="网格与连通块">网格与连通块</h3>
+<section class="algorithm" data-search="网格 dfs / flood fill"><h4 id="网格-dfs-flood-fill">网格 DFS / Flood Fill<a class="anchor" href="#网格-dfs-flood-fill" aria-label="定位到 网格 DFS / Flood Fill">#</a></h4>
+<p><strong>解决什么</strong>：统计网格连通块、判断路径存在、从边界反向标记可达区域，或遍历隐式图中的一个完整分量。</p>
+<p><strong>核心原理</strong>：每个格子是节点，相邻方向是边。进入格子时立即标记，避免沿无向边回到父节点；若一次搜索中的访问状态要供下一条候选路径复用，则返回前撤销。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def flood_fill(grid, start_row, start_col):
+  rows, columns = len(grid), len(grid[0])
+  stack = [(start_row, start_col)]
+  visited = {(start_row, start_col)}
+  while stack:
+    row, column = stack.pop()
+    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+      nr, nc = row + dr, column + dc
+      if 0 &lt;= nr &lt; rows and 0 &lt;= nc &lt; columns and (nr, nc) not in visited:
+        if can_enter(grid, nr, nc):
+          visited.add((nr, nc))
+          stack.append((nr, nc))
+  return visited</code></pre></div>
+<p><strong>复杂度</strong>：每个格子至多访问一次，时间 $O(mn)$，栈与访问集合空间 $O(mn)$。</p>
+<p><strong>易错点</strong>：深网格递归 DFS 可能超过 Python 递归深度，显式栈更稳妥；永久访问标记与回溯临时标记语义不同；必须先判边界再访问网格。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/pacific-atlantic-water-flow/" target="_blank" rel="noreferrer">417. Pacific Atlantic Water Flow</a> 使用从海岸反向搜索的建模；C++ 历史实现：<a href="https://leetcode.com/problems/word-search/" target="_blank" rel="noreferrer">79. Word Search</a>、<a href="https://leetcode.com/problems/number-of-islands/" target="_blank" rel="noreferrer">200. Number of Islands</a></p>
+</section>
+<h3 id="同步扩散">同步扩散</h3>
+<section class="algorithm" data-search="多源 bfs"><h4 id="多源-bfs">多源 BFS<a class="anchor" href="#多源-bfs" aria-label="定位到 多源 BFS">#</a></h4>
+<p><strong>解决什么</strong>：求每个位置到最近源点的距离、模拟多个起点同时扩散，或确定所有目标完成传播的最早时刻。</p>
+<p><strong>核心原理</strong>：把全部源点以距离 0 同时入队，相当于添加一个连接所有源点的虚拟超级源。队列按层推进，第一次到达即是最近源点距离。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import deque
+
+def multi_source_distance(rows, columns, sources):
+  distance = [[-1] * columns for _ in range(rows)]
+  queue = deque()
+  for row, column in sources:
+    distance[row][column] = 0
+    queue.append((row, column))
+  while queue:
+    row, column = queue.popleft()
+    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+      nr, nc = row + dr, column + dc
+      if 0 &lt;= nr &lt; rows and 0 &lt;= nc &lt; columns and distance[nr][nc] == -1:
+        distance[nr][nc] = distance[row][column] + 1
+        queue.append((nr, nc))
+  return distance</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(mn)$，空间 $O(mn)$。</p>
+<p><strong>易错点</strong>：所有源点必须在搜索开始前一起入队；入队时就标记，不能等出队；若源点有不同优先级或边权，普通多源 BFS 可能要改成堆或分桶。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/multi-source-flood-fill/" target="_blank" rel="noreferrer">3905. Multi Source Flood Fill</a> 含颜色优先级；C++ 历史实现：<a href="https://leetcode.com/problems/rotting-oranges/" target="_blank" rel="noreferrer">994. Rotting Oranges</a></p>
+</section>
+<h3 id="隐式状态图">隐式状态图</h3>
+<section class="algorithm" data-search="状态图 bfs"><h4 id="状态图-bfs">状态图 BFS<a class="anchor" href="#状态图-bfs" aria-label="定位到 状态图 BFS">#</a></h4>
+<p><strong>解决什么</strong>：字符串变换、密码锁、带钥匙或资源限制的最少操作次数，其中节点不是输入显式给出的图节点，而是一个完整状态。</p>
+<p><strong>核心原理</strong>：定义 <code>neighbors(state)</code> 生成一步可达状态；BFS 首次到达目标时层数最小。位置相同但附加资源不同通常是不同节点，<code>visited</code> 必须保存完整状态。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import deque
+
+def shortest_steps(start, is_target, neighbors):
+  queue = deque([(start, 0)])
+  visited = {start}
+  while queue:
+    state, steps = queue.popleft()
+    if is_target(state):
+      return steps
+    for next_state in neighbors(state):
+      if next_state not in visited:
+        visited.add(next_state)
+        queue.append((next_state, steps + 1))
+  return -1</code></pre></div>
+<p><strong>复杂度</strong>：设可达状态数为 $S$、每个状态最多生成 $B$ 个邻居，时间 $O(SB)$，空间 $O(S)$。</p>
+<p><strong>易错点</strong>：状态必须可哈希且包含影响未来转移的全部信息；无权边才能用首次到达作为最短路；先检查禁用状态还是先检查目标要按题意决定。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/word-ladder/" target="_blank" rel="noreferrer">127. Word Ladder</a>、<a href="https://leetcode.com/problems/open-the-lock/" target="_blank" rel="noreferrer">752. Open the Lock</a>、<a href="https://leetcode.com/problems/shortest-path-in-binary-matrix/" target="_blank" rel="noreferrer">1091. Shortest Path in Binary Matrix</a></p>
+</section></section><section class="chapter" id="回溯与搜索剪枝" data-search="回溯与搜索剪枝"><div class="chapter-index">04</div><h2>回溯与搜索剪枝</h2><h3 id="选择路径">选择路径</h3>
+<section class="algorithm" data-search="选择、递归与撤销"><h4 id="选择递归与撤销">选择、递归与撤销<a class="anchor" href="#选择递归与撤销" aria-label="定位到 选择、递归与撤销">#</a></h4>
+<p><strong>解决什么</strong>：枚举组合、排列、分割方案，以及所有答案都对应搜索树中一条根到叶路径的问题。</p>
+<p><strong>核心原理</strong>：递归状态由当前路径、下一层候选和终止条件组成。做选择后递归，返回时撤销，使兄弟分支看到相同现场；组合用起始下标避免顺序重复，排列用 <code>used</code> 区分位置。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def combinations(nums, target):
+  answer, path = [], []
+
+  def backtrack(start, remaining):
+    if remaining == 0:
+      answer.append(path.copy())
+      return
+    for index in range(start, len(nums)):
+      value = nums[index]
+      if value &gt; remaining:
+        break
+      path.append(value)
+      backtrack(index, remaining - value)
+      path.pop()
+
+  backtrack(0, target)
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：由搜索树规模决定，通常为指数级；输出 $A$ 个平均长度为 $L$ 的方案至少需要 $O(AL)$ 时间与空间，递归栈深度等于路径长度。</p>
+<p><strong>易错点</strong>：可重复选择时递归传 <code>index</code>，每个元素限用一次时传 <code>index + 1</code>；加入答案必须复制路径；候选未排序时不能按数值提前 <code>break</code>。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/letter-combinations-of-a-phone-number/" target="_blank" rel="noreferrer">17. Letter Combinations of a Phone Number</a>、<a href="https://leetcode.com/problems/combination-sum/" target="_blank" rel="noreferrer">39. Combination Sum</a></p>
+</section>
+<h3 id="重复候选">重复候选</h3>
+<section class="algorithm" data-search="排序与同层去重"><h4 id="排序与同层去重">排序与同层去重<a class="anchor" href="#排序与同层去重" aria-label="定位到 排序与同层去重">#</a></h4>
+<p><strong>解决什么</strong>：输入含重复元素时生成不重复的组合或排列，避免先生成全部答案再用集合去重。</p>
+<p><strong>核心原理</strong>：先排序，让相同值相邻。同一递归层中，若当前值等于前一个值且前一个候选没有在本层被选择，就跳过；不同层仍可按题意使用相同值。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def unique_permutations(nums):
+  nums.sort()
+  answer, path = [], []
+  used = [False] * len(nums)
+
+  def backtrack():
+    if len(path) == len(nums):
+      answer.append(path.copy())
+      return
+    for index, value in enumerate(nums):
+      if used[index] or (index &gt; 0 and value == nums[index - 1] and not used[index - 1]):
+        continue
+      used[index] = True
+      path.append(value)
+      backtrack()
+      path.pop()
+      used[index] = False
+
+  backtrack()
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：最坏生成 $n!$ 个排列，时间 $O(n\cdot n!)$，结果外空间 $O(n)$；重复值会减少实际叶节点数。</p>
+<p><strong>易错点</strong>：去重条件约束的是同层，不是禁止不同层选择同值；排序是该判断成立的前提；组合去重常用 <code>index &gt; start</code>，排列去重还要结合 <code>used</code>。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/combination-sum-ii/" target="_blank" rel="noreferrer">40. Combination Sum II</a>、<a href="https://leetcode.com/problems/permutations-ii/" target="_blank" rel="noreferrer">47. Permutations II</a></p>
+</section>
+<h3 id="可行性边界">可行性边界</h3>
+<section class="algorithm" data-search="上下界与对称性剪枝"><h4 id="上下界与对称性剪枝">上下界与对称性剪枝<a class="anchor" href="#上下界与对称性剪枝" aria-label="定位到 上下界与对称性剪枝">#</a></h4>
+<p><strong>解决什么</strong>：括号合法性、等和分桶、单词方阵等约束密集搜索，尽早排除不可能完成或与已搜索分支对称的状态。</p>
+<p><strong>核心原理</strong>：排序后优先放置约束最强的候选；维护剩余容量上下界；多个桶容量相同时只尝试第一个；一旦空桶尝试失败，其他空桶完全对称，可立即停止。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def can_partition_k_subsets(nums, bucket_count):
+  total = sum(nums)
+  if total % bucket_count:
+    return False
+  target = total // bucket_count
+  nums.sort(reverse=True)
+  buckets = [0] * bucket_count
+
+  def backtrack(index):
+    if index == len(nums):
+      return True
+    value = nums[index]
+    seen = set()
+    for bucket in range(bucket_count):
+      if buckets[bucket] in seen or buckets[bucket] + value &gt; target:
+        continue
+      seen.add(buckets[bucket])
+      buckets[bucket] += value
+      if backtrack(index + 1):
+        return True
+      buckets[bucket] -= value
+      if buckets[bucket] == 0:
+        break
+    return False
+
+  return nums[0] &lt;= target and backtrack(0)</code></pre></div>
+<p><strong>复杂度</strong>：最坏仍为 $O(k^n)$ 时间、$O(n+k)$ 空间；排序和对称性剪枝只减少实际搜索量，不改变最坏指数级上界。</p>
+<p><strong>易错点</strong>：剪枝必须证明不会删掉唯一解；等容量桶是可交换的，桶有标签时不能套对称剪枝；重复状态很多时应考虑记忆化或状态压缩 DP。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/generate-parentheses/" target="_blank" rel="noreferrer">22. Generate Parentheses</a> 使用合法前缀剪枝；<a href="https://leetcode.com/problems/partition-to-k-equal-sum-subsets/" target="_blank" rel="noreferrer">698. Partition to K Equal Sum Subsets</a> 使用降序、目标和与分桶搜索；<a href="https://leetcode.com/problems/word-squares-ii/" target="_blank" rel="noreferrer">3799. Word Squares II</a> 使用位掩码记录选择并按前缀约束候选。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 本地实现：<a href="https://leetcode.com/problems/palindrome-partitioning/" target="_blank" rel="noreferrer">131. Palindrome Partitioning</a>：分割型回溯；可预处理回文区间减少重复判断。</li></ul>
+</section></section><section class="chapter" id="动态规划" data-search="动态规划"><div class="chapter-index">05</div><h2>动态规划</h2><p>动态规划先写清状态含义、转移、初值和计算顺序；不可达状态不能参与转移。树上选或不选等模型见<a href="#树形-dp">树形 DP</a>，此处不重复。</p>
+<h3 id="一维依赖">一维依赖</h3>
+<section class="algorithm" data-search="线性 dp 与滚动状态"><h4 id="线性-dp-与滚动状态">线性 DP 与滚动状态<a class="anchor" href="#线性-dp-与滚动状态" aria-label="定位到 线性 DP 与滚动状态">#</a></h4>
+<p><strong>解决什么</strong>：数组前缀上的最优选择、相邻元素不能同时选择、路径逐层转移，以及当前状态只依赖固定数量前项的问题。</p>
+<p><strong>核心原理</strong>：令 <code>dp[i]</code> 表示处理前 $i$ 个元素的最优值。若只依赖 <code>dp[i-1]</code>、<code>dp[i-2]</code>，用两个变量滚动；压缩前必须确认本轮不会读取已覆盖状态。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def rob_linear(values):
+  previous_two = previous_one = 0
+  for value in values:
+    current = max(previous_one, previous_two + value)
+    previous_two, previous_one = previous_one, current
+  return previous_one</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，额外空间 $O(1)$；需要还原方案时通常保留 $O(n)$ 的前驱信息。</p>
+<p><strong>易错点</strong>：状态是“前 $i$ 个”还是“必须选第 $i$ 个”会产生不同转移；环形序列通常拆成不选首项与不选末项；空输入初值要有定义。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/house-robber/" target="_blank" rel="noreferrer">198. House Robber</a>；Python 本地实现：<a href="https://leetcode.com/problems/triangle/" target="_blank" rel="noreferrer">120. Triangle</a> 使用逐层路径 DP；Python 本地实现：<a href="https://leetcode.com/problems/house-robber-v/" target="_blank" rel="noreferrer">3840. House Robber V</a> 扩展了颜色约束。</p>
+</section>
+<h3 id="容量选择">容量选择</h3>
+<section class="algorithm" data-search="0-1 背包与完全背包"><h4 id="0-1-背包与完全背包">0-1 背包与完全背包<a class="anchor" href="#0-1-背包与完全背包" aria-label="定位到 0-1 背包与完全背包">#</a></h4>
+<p><strong>解决什么</strong>：每件物品最多选一次或可无限次，在容量限制下判断可达性、最大化价值或最小化物品数。</p>
+<p><strong>核心原理</strong>：一维压缩时，0-1 背包容量倒序，防止同一物品在本轮被重复使用；完全背包容量正序，允许读取本轮刚更新的状态来复用当前物品。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def can_partition(nums):
+  total = sum(nums)
+  if total % 2:
+    return False
+  target = total // 2
+  reachable = [False] * (target + 1)
+  reachable[0] = True
+  for value in nums:
+    for capacity in range(target, value - 1, -1):
+      reachable[capacity] |= reachable[capacity - value]
+  return reachable[target]</code></pre></div>
+<p><strong>复杂度</strong>：$n$ 件物品、容量 $C$ 时，时间 $O(nC)$，空间 $O(C)$。</p>
+<p><strong>易错点</strong>：遍历方向决定物品能否复用；最小化问题应以 $+\infty$ 初始化不可达状态；计数、排列数和组合数的循环顺序不同。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/coin-change/" target="_blank" rel="noreferrer">322. Coin Change</a>、<a href="https://leetcode.com/problems/partition-equal-subset-sum/" target="_blank" rel="noreferrer">416. Partition Equal Subset Sum</a></p>
+</section>
+<h3 id="序列对齐">序列对齐</h3>
+<section class="algorithm" data-search="双序列 dp"><h4 id="双序列-dp">双序列 DP<a class="anchor" href="#双序列-dp" aria-label="定位到 双序列 DP">#</a></h4>
+<p><strong>解决什么</strong>：最长公共子序列、编辑与匹配、两个字符串前缀之间的转换代价。</p>
+<p><strong>核心原理</strong>：<code>dp[i][j]</code> 表示两个序列前缀 <code>first[:i]</code>、<code>second[:j]</code> 的答案；末尾元素相等时继承左上角，否则从删去一侧末尾的状态中选择。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def longest_common_subsequence(first, second):
+  previous = [0] * (len(second) + 1)
+  for left in first:
+    current = [0]
+    for column, right in enumerate(second, 1):
+      if left == right:
+        current.append(previous[column - 1] + 1)
+      else:
+        current.append(max(previous[column], current[-1]))
+    previous = current
+  return previous[-1]</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(mn)$，滚动数组空间 $O(n)$；交换两个序列可令空间为 $O(\min(m,n))$。</p>
+<p><strong>易错点</strong>：为空前缀预留第 0 行和第 0 列；子序列不要求连续；正则匹配等特殊问题的转移不能直接等同于 LCS。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/delete-operation-for-two-strings/" target="_blank" rel="noreferrer">583. Delete Operation for Two Strings</a> 使用记忆化 LCS；C++ 历史实现：<a href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank" rel="noreferrer">1143. Longest Common Subsequence</a>；Python 本地实现：<a href="https://leetcode.com/problems/minimum-cost-to-convert-string-iii/" target="_blank" rel="noreferrer">3995. Minimum Cost to Convert String III</a> 使用字符串分段 DP。</p>
+</section>
+<h3 id="区间合并">区间合并</h3>
+<section class="algorithm" data-search="区间 dp"><h4 id="区间-dp">区间 DP<a class="anchor" href="#区间-dp" aria-label="定位到 区间 DP">#</a></h4>
+<p><strong>解决什么</strong>：合并、切分、括号化或选择区间中最后一个操作，使大区间答案可由两个独立小区间合并。</p>
+<p><strong>核心原理</strong>：按区间长度从短到长计算。以戳气球为例，枚举区间内最后被戳的气球 <code>middle</code>，此时左右区间已独立完成，边界贡献确定。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def burst_balloons(nums):
+  values = [1] + nums + [1]
+  size = len(values)
+  dp = [[0] * size for _ in range(size)]
+  for length in range(2, size):
+    for left in range(size - length):
+      right = left + length
+      dp[left][right] = max(
+        dp[left][middle] + values[left] * values[middle] * values[right] + dp[middle][right]
+        for middle in range(left + 1, right)
+      )
+  return dp[0][-1]</code></pre></div>
+<p><strong>复杂度</strong>：该模板时间 $O(n^3)$，空间 $O(n^2)$。</p>
+<p><strong>易错点</strong>：先明确区间是开区间还是闭区间；必须保证子区间已计算；枚举“最后一步”常比枚举“第一步”更容易让左右子问题独立。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/burst-balloons/" target="_blank" rel="noreferrer">312. Burst Balloons</a></p>
+</section>
+<h3 id="线性区间扩张">线性区间扩张</h3>
+<section class="algorithm" data-search="从起点向两端扩张"><h4 id="从起点向两端扩张">从起点向两端扩张<a class="anchor" href="#从起点向两端扩张" aria-label="定位到 从起点向两端扩张">#</a></h4>
+<p><strong>解决什么</strong>：目标点位于一条线上，从起点出发逐个访问；访问过的目标必然形成连续区间，移动时所有未完成目标还会同时累积等待代价。</p>
+<p><strong>核心原理</strong>：排序目标并插入起点。状态 <code>dp[left][right][side]</code> 表示已访问排序后区间 <code>[left, right]</code>，当前位置在左端或右端时的最小总代价。区间外只可能先访问 <code>left-1</code> 或 <code>right+1</code>；移动距离乘以当前未完成目标数，就是这段移动对总完成时间之和的贡献。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def minimum_total_completion_time(start, requests):
+  request_set = set(requests)
+  points = sorted(request_set | {start})
+  size = len(points)
+  origin = points.index(start)
+  weights = [int(point in request_set) for point in points]
+  prefix = [0]
+  for weight in weights:
+    prefix.append(prefix[-1] + weight)
+
+  infinity = float(&quot;inf&quot;)
+  left_dp = [[infinity] * size for _ in range(size)]
+  right_dp = [[infinity] * size for _ in range(size)]
+  left_dp[origin][origin] = right_dp[origin][origin] = 0
+  for length in range(1, size + 1):
+    for left in range(max(0, origin - length + 1), origin + 1):
+      right = left + length - 1
+      if right &gt;= size or right &lt; origin:
+        continue
+      unfinished = len(request_set) - (prefix[right + 1] - prefix[left])
+      if left &gt; 0:
+        left_dp[left - 1][right] = min(
+          left_dp[left - 1][right],
+          left_dp[left][right] + unfinished * (points[left] - points[left - 1]),
+          right_dp[left][right] + unfinished * (points[right] - points[left - 1]),
+        )
+      if right + 1 &lt; size:
+        right_dp[left][right + 1] = min(
+          right_dp[left][right + 1],
+          left_dp[left][right] + unfinished * (points[right + 1] - points[left]),
+          right_dp[left][right] + unfinished * (points[right + 1] - points[right]),
+        )
+  return min(left_dp[0][-1], right_dp[0][-1])</code></pre></div>
+<p><strong>复杂度</strong>：排序 $O(n\log n)$，区间状态时间和空间均为 $O(n^2)$。</p>
+<p><strong>易错点</strong>：路程对目标函数的贡献是“距离乘未完成数量”，不是只加本次到达时间；起点若本身是请求应在时刻 0 计为完成；只有目标在线上且越过目标即可顺便完成时，已访问集合才压缩成连续区间。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/elevator-requests-ii/" target="_blank" rel="noreferrer">4023. Elevator Requests II</a>：本地递归状态保存未访问区间两端与当前楼层，转移使用相同的剩余请求数加权。</p>
+</section>
+<h3 id="子集状态">子集状态</h3>
+<section class="algorithm" data-search="状态压缩 dp"><h4 id="状态压缩-dp">状态压缩 DP<a class="anchor" href="#状态压缩-dp" aria-label="定位到 状态压缩 DP">#</a></h4>
+<p><strong>解决什么</strong>：$n$ 通常不超过 20，状态由一个已选择集合决定，并需要枚举剩余元素或子集转移的问题。</p>
+<p><strong>核心原理</strong>：用位掩码 <code>mask</code> 表示集合，<code>dp[mask]</code> 保存到达该集合的最优值。若后续代价还取决于当前位置，则扩展成 <code>dp[mask][last]</code>；在相同集合和终点下，只保留最早时间或最小代价，因为更差状态不会让后续转移更优。只有前置条件全部包含在 <code>mask</code> 中的元素才可加入；需要批量选择时可枚举非空子集。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def minimum_semesters(prerequisites, limit):
+  node_count = len(prerequisites)
+  full = (1 &lt;&lt; node_count) - 1
+  dp = [float(&quot;inf&quot;)] * (1 &lt;&lt; node_count)
+  dp[0] = 0
+  for mask in range(1 &lt;&lt; node_count):
+    available = 0
+    for node, required in enumerate(prerequisites):
+      if not (mask &gt;&gt; node &amp; 1) and required &amp; mask == required:
+        available |= 1 &lt;&lt; node
+    subset = available
+    while subset:
+      if subset.bit_count() &lt;= limit:
+        dp[mask | subset] = min(dp[mask | subset], dp[mask] + 1)
+      subset = (subset - 1) &amp; available
+  return dp[full]</code></pre></div>
+<p><strong>复杂度</strong>：枚举所有状态及其子集最坏为 $O(3^n)$ 时间，空间 $O(2^n)$；<code>mask + last</code> 并逐个添加元素时通常为 $O(2^n n^2)$ 时间、$O(2^n n)$ 空间。</p>
+<p><strong>易错点</strong>：位编号与元素编号要统一；不可达状态不能参与转移；若转移代价依赖终点，不能只保留 <code>dp[mask]</code>；若只选固定数量，可只枚举满足 <code>bit_count</code> 的子集。数位 DP 虽也常用掩码记录已用数字，但还需 <code>position/tight/started</code> 状态。</p>
+<p><strong>对应例题</strong>：Python 对照实现：<a href="https://leetcode.com/problems/parallel-courses-ii/" target="_blank" rel="noreferrer">1494. Parallel Courses II</a> 当前按解锁数量启发式选课，并非状态压缩 DP 实证；Python 本地实现：<a href="https://leetcode.com/problems/count-special-integers/" target="_blank" rel="noreferrer">2376. Count Special Integers</a> 使用数位状态与已用数字集合。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank" rel="noreferrer">300. Longest Increasing Subsequence</a>：序列 DP。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/number-of-zigzag-arrays-ii/" target="_blank" rel="noreferrer">3700. Number of ZigZag Arrays II</a>：状态转移矩阵与快速幂。</li></ul>
+</section></section><section class="chapter" id="贪心" data-search="贪心"><div class="chapter-index">06</div><h2>贪心</h2><p>贪心成立的关键是证明局部选择具有安全性。常用论证是交换论证、支配关系和反证法；若无法把任意最优解改造成包含当前选择的最优解，就应保留多个状态并考虑 DP。</p>
+<h3 id="区间选择">区间选择</h3>
+<section class="algorithm" data-search="最早结束时间贪心"><h4 id="最早结束时间贪心">最早结束时间贪心<a class="anchor" href="#最早结束时间贪心" aria-label="定位到 最早结束时间贪心">#</a></h4>
+<p><strong>解决什么</strong>：选择最多个互不重叠区间，或等价地删除最少区间使剩余区间互不重叠。</p>
+<p><strong>核心原理</strong>：按右端点升序选择第一个兼容区间。正确性用交换论证：任意最优解的第一个区间都可换成结束更早的贪心区间，后续可用空间只会增大，不会减少可选数量。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def maximum_non_overlapping(intervals):
+  end = float(&quot;-inf&quot;)
+  selected = 0
+  for left, right in sorted(intervals, key=lambda interval: interval[1]):
+    if left &gt;= end:
+      selected += 1
+      end = right
+  return selected</code></pre></div>
+<p><strong>复杂度</strong>：排序 $O(n\log n)$，扫描 $O(n)$，额外空间取决于排序实现。</p>
+<p><strong>易错点</strong>：按开始时间排序不能保证留出最大后续空间；端点接触是否冲突决定使用 <code>&gt;=</code> 还是 <code>&gt;</code>；加权区间调度不能套此贪心，应使用 DP。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank" rel="noreferrer">435. Non-overlapping Intervals</a></p>
+</section>
+<h3 id="排序配对">排序配对</h3>
+<section class="algorithm" data-search="同序配对与交换论证"><h4 id="同序配对与交换论证">同序配对与交换论证<a class="anchor" href="#同序配对与交换论证" aria-label="定位到 同序配对与交换论证">#</a></h4>
+<p><strong>解决什么</strong>：两个序列一一配对，收益形如乘积，或要把更稀缺、更高收益的资源分配给价值更大的对象。</p>
+<p><strong>核心原理</strong>：将两侧同序排序后配对。对 $a\ge b$、$x\ge y$，有 $ax+by\ge ay+bx$，因为两式之差为 $(a-b)(x-y)\ge0$；反复消除逆序配对即可得到全局最优。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def minimum_discounted_price(prices, discounts):
+  prices.sort(reverse=True)
+  discounts.sort(reverse=True)
+  answer = sum(prices)
+  for price, discount in zip(prices, discounts):
+    answer -= price * discount / 100
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：排序时间 $O(n\log n+m\log m)$，额外空间由排序实现决定。</p>
+<p><strong>易错点</strong>：先确认目标可写成独立配对收益；存在容量、依赖或位置约束时交换可能不可行；浮点金额按题目要求处理精度与舍入。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/minimum-total-price-after-applying-discounts/" target="_blank" rel="noreferrer">4014. Minimum Total Price After Applying Discounts</a>；Python 本地实现：<a href="https://leetcode.com/problems/maximum-units-on-a-truck/" target="_blank" rel="noreferrer">1710. Maximum Units on a Truck</a>；C++ 历史实现：<a href="https://leetcode.com/problems/assign-cookies/" target="_blank" rel="noreferrer">455. Assign Cookies</a></p>
+</section>
+<h3 id="候选支配">候选支配</h3>
+<section class="algorithm" data-search="保留支配候选"><h4 id="保留支配候选">保留支配候选<a class="anchor" href="#保留支配候选" aria-label="定位到 保留支配候选">#</a></h4>
+<p><strong>解决什么</strong>：多个候选可重复使用且没有容量耦合，其中一个候选对每个输入都不劣于另一个候选，可以先删除所有被支配候选再求解。</p>
+<p><strong>核心原理</strong>：若候选 $A$ 对任意任务的代价都不大于候选 $B$，则任何使用 $B$ 的方案都能把它替换为 $A$ 而不变差。同步交通灯中，绿灯时长更大的灯覆盖更短灯的全部零等待时刻；红灯等待又只由到达余数决定，因此只保留最大绿灯时长即可。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def minimum_maximum_wait(period, green_lengths, arrivals):
+  longest_green = max(green_lengths)
+
+  def wait(arrival):
+    remainder = arrival % period
+    return 0 if remainder &lt; longest_green else period - remainder
+
+  return max(map(wait, arrivals))</code></pre></div>
+<p><strong>复杂度</strong>：寻找支配候选并扫描任务，时间 $O(n+m)$，辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：支配必须对所有可能输入成立；候选有容量、费用、不同相位或任务间冲突时，不能独立替换；最小化最大值仍需检查每个任务在支配候选下的代价。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/minimize-the-maximum-waiting-time-at-synchronized-traffic-lights/" target="_blank" rel="noreferrer">4025. Minimize the Maximum Waiting Time at Synchronized Traffic Lights</a></p>
+</section>
+<h3 id="连续覆盖">连续覆盖</h3>
+<section class="algorithm" data-search="当前可达范围内延伸最远"><h4 id="当前可达范围内延伸最远">当前可达范围内延伸最远<a class="anchor" href="#当前可达范围内延伸最远" aria-label="定位到 当前可达范围内延伸最远">#</a></h4>
+<p><strong>解决什么</strong>：用最少区间覆盖目标范围，或在当前位置之前选择能把边界推进最远的候选。</p>
+<p><strong>核心原理</strong>：扫描所有左端点不超过当前边界的区间，只保留最远右端点；必须做选择时才增加次数。支配论证：任何更短的可用区间都不能提供贪心区间之外的新后续候选，因此可被最远者替换。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def minimum_cover(intervals, target):
+  intervals.sort()
+  used = index = current = 0
+  while current &lt; target:
+    farthest = current
+    while index &lt; len(intervals) and intervals[index][0] &lt;= current:
+      farthest = max(farthest, intervals[index][1])
+      index += 1
+    if farthest == current:
+      return -1
+    current = farthest
+    used += 1
+  return used</code></pre></div>
+<p><strong>复杂度</strong>：排序 $O(n\log n)$，扫描 $O(n)$，额外空间由排序实现决定。</p>
+<p><strong>易错点</strong>：必须在同一当前边界下看完所有候选再选择；无法推进时立即无解；最大不相交区间应按结束时间，而覆盖问题按当前可达范围延伸最远。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/video-stitching/" target="_blank" rel="noreferrer">1024. Video Stitching</a>；C++ 历史实现：<a href="https://leetcode.com/problems/gas-station/" target="_blank" rel="noreferrer">134. Gas Station</a> 使用“区间总和为负则该段起点全部失败”的批量排除思想。</p>
+</section>
+<h3 id="局部贡献">局部贡献</h3>
+<section class="algorithm" data-search="峰谷替换与正增量累加"><h4 id="峰谷替换与正增量累加">峰谷替换与正增量累加<a class="anchor" href="#峰谷替换与正增量累加" aria-label="定位到 峰谷替换与正增量累加">#</a></h4>
+<p><strong>解决什么</strong>：收益可拆成相邻增量，或只需保留最有利峰谷而中间选择可被支配的问题。</p>
+<p><strong>核心原理</strong>：股票无限次交易中，每段上涨总利润等于所有正相邻差之和；波动序列中，同方向连续变化只保留更极端端点。交换论证说明把中间点替换为更高峰或更低谷不会减少后续选择空间。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def sum_positive_gains(values):
+  return sum(
+    max(0, current - previous)
+    for previous, current in zip(values, values[1:])
+  )</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，额外空间 $O(1)$。</p>
+<p><strong>易错点</strong>：只有交易次数不限且无手续费、冷冻期等跨期约束时才能直接累加正增量；峰谷贪心要忽略零差并正确处理最后趋势。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/wiggle-subsequence/" target="_blank" rel="noreferrer">376. Wiggle Subsequence</a>；C++ 历史实现：<a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/" target="_blank" rel="noreferrer">122. Best Time to Buy and Sell Stock II</a></p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 本地实现：<a href="https://leetcode.com/problems/partition-labels/" target="_blank" rel="noreferrer">763. Partition Labels</a>：扫描字符最后出现位置，当前下标到达最远边界时切分。</li></ul>
+</section></section>
+    <nav class="pager" aria-label="分册导航"><a href="02-linear-and-interval.html"><small>上一册</small><strong>线性与区间技巧</strong></a><a class="next" href="04-graphs-and-structures.html"><small>下一册</small><strong>图与高级数据结构</strong></a></nav>
+  </main>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script defer src="assets/app.js"></script>
+</body>
+</html>

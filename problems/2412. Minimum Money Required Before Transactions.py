@@ -1,0 +1,45 @@
+'''
+=== 2412. Minimum Money Required Before Transactions ===
+
+You are given a 0-indexed 2D integer array transactions, where transactions[i] = [costi, cashbacki].
+The array describes transactions, where each transaction must be completed exactly once in some order. At any given moment, you have a certain amount of money. In order to complete transaction i, money >= costi must hold true. After performing a transaction, money becomes money - costi + cashbacki.
+Return the minimum amount of money required before any transaction so that all of the transactions can be completed regardless of the order of the transactions.
+
+Example 1:
+    Input: transactions = [[2,1],[5,0],[4,2]]
+    Output: 10
+    Explanation:
+    Starting with money = 10, the transactions can be performed in any order.
+    It can be shown that starting with money < 10 will fail to complete all transactions in some order.
+Example 2:
+    Input: transactions = [[3,0],[0,3]]
+    Output: 3
+    Explanation:
+    - If transactions are in the order [[3,0],[0,3]], the minimum money required to complete the transactions is 3.
+    - If transactions are in the order [[0,3],[3,0]], the minimum money required to complete the transactions is 0.
+    Thus, starting with money = 3, the transactions can be performed in any order.
+ 
+Constraints:
+    1. 1 <= transactions.length <= 105
+    2. transactions[i].length == 2
+    3. 0 <= costi, cashbacki <= 109
+'''
+# === 4174ms && 63MB === #
+class Solution:
+    def minimumMoney(self, transactions: List[List[int]]) -> int:
+        def order(cost, cashback):
+            if cashback - cost <= 0:
+                return (0, cashback, cashback - cost)
+            else:
+                return (1, -cost, cashback - cost)
+        transactions = sorted(transactions, key = lambda x: order(*x))
+        # print(transactions)
+        need = 0
+        remain = 0
+        for cost, cashback in transactions:
+            if remain < cost:
+                need += cost - remain
+                remain = cashback
+            else:
+                remain += cashback - cost
+        return need

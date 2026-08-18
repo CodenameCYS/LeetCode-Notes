@@ -1,0 +1,39 @@
+'''
+=== 3828. Final Element After Subarray Deletions ===
+
+You are given an integer array nums.
+Two players, Alice and Bob, play a game in turns, with Alice playing first.
+    - In each turn, the current player chooses any subarray nums[l..r] such that r - l + 1 < m, where m is the current length of the array.
+    - The selected subarray is removed, and the remaining elements are concatenated to form the new array.
+    - The game continues until only one element remains.
+Alice aims to maximize the final element, while Bob aims to minimize it. Assuming both play optimally, return the value of the final remaining element.
+
+Example 1:
+    Input: nums = [1,5,2]
+    Output: 2
+    Explanation:
+    One valid optimal strategy:
+    Alice removes [1], array becomes [5, 2].
+    Bob removes [5], array becomes [2]​​​​​​​. Thus, the answer is 2.
+Example 2:
+    Input: nums = [3,7]
+    Output: 7
+    Explanation:
+    Alice removes [3], leaving the array [7]. Since Bob cannot play a turn now, the answer is 7.
+
+Constraints:
+    1. 1 <= nums.length <= 105
+    2. 1 <= nums[i] <= 105
+'''
+# === 0ms && 33.67MB === #
+class Solution:
+    def finalElement(self, nums: List[int]) -> int:
+        # n = len(nums)
+        # if n <= 2:
+        #     return max(nums)
+        # i, j, k = nums[0], nums[-1], max(nums[1:n-1])
+        # if k <= i or k <= j:
+        #     return max(i, j)
+        # else:
+        #     return min(k, max(i, j))
+        return max(nums[0], nums[-1])

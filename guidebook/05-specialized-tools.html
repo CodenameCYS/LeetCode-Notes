@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="集中整理位运算、数论、矩阵与几何中可直接复用的专项方法。">
+  <title>专项工具 · LeetCode Guidebook</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body class="reader-page" data-accent="violet">
+  <a class="skip-link" href="#main-content">跳到正文</a>
+  <aside class="sidebar">
+    <a class="brand" href="main.html"><span class="brand-mark">LC</span><span>Algorithm<br>Guidebook</span></a>
+    <div class="side-label">本册目录</div><nav><details class="side-chapter"><summary><span>位运算</span><small>4</small></summary><div class="side-branch"><a class="side-overview" href="#位运算">章节概览</a><details class="side-module"><summary><span>异或消元</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#异或分组与位状态机">异或分组与位状态机</a></div></details><details class="side-module"><summary><span>二进制最低位</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#lowbit-与位计数-dp">lowbit 与位计数 DP</a></div></details><details class="side-module"><summary><span>小集合状态压缩</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#位掩码与子集枚举">位掩码与子集枚举</a></div></details><details class="side-module"><summary><span>按位最优选择</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#01-trie-最大异或">01 Trie 最大异或</a></div></details></div></details><details class="side-chapter"><summary><span>数学与数论</span><small>4</small></summary><div class="side-branch"><a class="side-overview" href="#数学与数论">章节概览</a><details class="side-module"><summary><span>整除关系</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#欧几里得与扩展欧几里得">欧几里得与扩展欧几里得</a></div></details><details class="side-module"><summary><span>幂与模运算</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#二进制快速幂">二进制快速幂</a></div></details><details class="side-module"><summary><span>素数预处理</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#埃氏筛">埃氏筛</a></div></details><details class="side-module"><summary><span>组合计数</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#阶乘逆元求组合数">阶乘逆元求组合数</a></div></details></div></details><details class="side-chapter"><summary><span>矩阵与计算几何</span><small>4</small></summary><div class="side-branch"><a class="side-overview" href="#矩阵与计算几何">章节概览</a><details class="side-module"><summary><span>坐标顺序建模</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#边界收缩与方向遍历">边界收缩与方向遍历</a></div></details><details class="side-module"><summary><span>矩形聚合与更新</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#二维前缀和与二维差分">二维前缀和与二维差分</a></div></details><details class="side-module"><summary><span>网格状态转移</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#矩阵-dp">矩阵 DP</a></div></details><details class="side-module"><summary><span>平面方向判定</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#叉积与有向面积">叉积与有向面积</a></div></details></div></details></nav>
+    <a class="back-map" href="main.html">返回完整思维导图</a>
+  </aside>
+  <main id="main-content" class="reader">
+    <header class="reader-head">
+      <div class="reader-actions"><a href="main.html">思维导图</a><label class="search"><span>搜索本册</span><input type="search" data-search-input placeholder="输入算法或知识点"></label></div>
+      <div class="edition">VOLUME 05</div><h1>专项工具</h1><p>集中整理位运算、数论、矩阵与几何中可直接复用的专项方法。</p>
+      <div class="reader-stats"><span>3 个题型</span><span>12 个典型算法</span></div>
+    </header>
+    <div class="no-results" data-no-results hidden>没有匹配的算法，请尝试更短的关键词。</div>
+    <section class="chapter" id="位运算" data-search="位运算"><div class="chapter-index">01</div><h2>位运算</h2><h3 id="异或消元">异或消元</h3>
+<section class="algorithm" data-search="异或分组与位状态机"><h4 id="异或分组与位状态机">异或分组与位状态机<a class="anchor" href="#异或分组与位状态机" aria-label="定位到 异或分组与位状态机">#</a></h4>
+<p><strong>解决什么</strong>：其余元素成对或成固定次数出现时找异常值，以及把每一位的出现次数压缩进有限状态。</p>
+<p><strong>核心原理</strong>：异或满足 <code>value ^ value = 0</code> 且交换、结合律成立。两个异常值时先异或得到差异位，再用 <code>xor_sum &amp; -xor_sum</code> 分组；出现三次的问题可对每一位计数模 $3$。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def two_single_numbers(nums):
+  xor_sum = 0
+  for value in nums:
+    xor_sum ^= value
+  lowbit = xor_sum &amp; -xor_sum
+  first = second = 0
+  for value in nums:
+    if value &amp; lowbit:
+      first ^= value
+    else:
+      second ^= value
+  return first, second</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：分组位必须来自两个答案的差异位；Python 处理负数逐位计数时要限定字长；“出现三次”不能直接用整体异或消去。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/single-number-ii/" target="_blank" rel="noreferrer">137. Single Number II</a>；C++ 历史实现：<a href="https://leetcode.com/problems/single-number-iii/" target="_blank" rel="noreferrer">260. Single Number III</a></p>
+</section>
+<h3 id="二进制最低位">二进制最低位</h3>
+<section class="algorithm" data-search="lowbit 与位计数 dp"><h4 id="lowbit-与位计数-dp">lowbit 与位计数 DP<a class="anchor" href="#lowbit-与位计数-dp" aria-label="定位到 lowbit 与位计数 DP">#</a></h4>
+<p><strong>解决什么</strong>：统计二进制中 $1$ 的个数、枚举置位位置，或批量计算 <code>0..n</code> 的位计数。</p>
+<p><strong>核心原理</strong>：<code>value &amp; -value</code> 只保留最低位的 $1$，<code>value &amp; (value - 1)</code> 删除最低位的 $1$。批量计数可复用 <code>bits[value &gt;&gt; 1] + (value &amp; 1)</code>。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def count_bits(limit):
+  bits = [0] * (limit + 1)
+  for value in range(1, limit + 1):
+    bits[value] = bits[value &gt;&gt; 1] + (value &amp; 1)
+  return bits</code></pre></div>
+<p><strong>复杂度</strong>：生成全部答案的时间和空间均为 $O(n)$；单个整数用消位法为 $O(\operatorname{popcount}(x))$ 时间、$O(1)$ 空间。</p>
+<p><strong>易错点</strong>：<code>value &amp; value - 1</code> 应加括号表达意图；Python 负数没有有限的前导零，直接循环清位不会按固定字长结束；<code>lowbit(0)</code> 为 <code>0</code>。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/counting-bits/" target="_blank" rel="noreferrer">338. Counting Bits</a>；C++ 历史实现：<a href="https://leetcode.com/problems/number-of-1-bits/" target="_blank" rel="noreferrer">191. Number of 1 Bits</a></p>
+</section>
+<h3 id="小集合状态压缩">小集合状态压缩</h3>
+<section class="algorithm" data-search="位掩码与子集枚举"><h4 id="位掩码与子集枚举">位掩码与子集枚举<a class="anchor" href="#位掩码与子集枚举" aria-label="定位到 位掩码与子集枚举">#</a></h4>
+<p><strong>解决什么</strong>：元素种类较少时表示集合、枚举一个集合的所有子集，或记录字符出现次数的奇偶状态。</p>
+<p><strong>核心原理</strong>：第 <code>bit</code> 位表示一种元素是否存在。<code>subset = (subset - 1) &amp; mask</code> 会按降序遍历 <code>mask</code> 的所有非空子集；前缀异或掩码可让两前缀之间的奇偶状态直接相消。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def enumerate_subsets(mask):
+  subsets = []
+  subset = mask
+  while subset:
+    subsets.append(subset)
+    subset = (subset - 1) &amp; mask
+  subsets.append(0)
+  return subsets</code></pre></div>
+<p><strong>复杂度</strong>：单个掩码含 $k$ 个置位时枚举时间和输出空间均为 $O(2^k)$；枚举所有 $n$ 位掩码的全部子集总量为 $O(3^n)$。</p>
+<p><strong>易错点</strong>：循环通常不包含空集，要在循环后单独处理；状态种类过多时掩码 DP 会指数爆炸；字符到位下标的映射必须稳定。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/number-of-wonderful-substrings/" target="_blank" rel="noreferrer">1915. Number of Wonderful Substrings</a>，本地源码使用前缀奇偶掩码计数，并非显式枚举全部子集。</p>
+</section>
+<h3 id="按位最优选择">按位最优选择</h3>
+<section class="algorithm" data-search="01 trie 最大异或"><h4 id="01-trie-最大异或">01 Trie 最大异或<a class="anchor" href="#01-trie-最大异或" aria-label="定位到 01 Trie 最大异或">#</a></h4>
+<p><strong>解决什么</strong>：从一组非负整数中寻找与查询值异或最大的元素，或附带上界条件回答离线查询。</p>
+<p><strong>核心原理</strong>：把整数从最高位到最低位插入二叉 Trie。查询时优先走与当前位相反的分支，使答案的当前位为 $1$；高位贡献始终优先于所有低位贡献。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def maximum_xor_pair(nums, width=31):
+  root = {}
+  for value in nums:
+    node = root
+    for bit in range(width - 1, -1, -1):
+      node = node.setdefault((value &gt;&gt; bit) &amp; 1, {})
+  answer = 0
+  for value in nums:
+    node = root
+    current = 0
+    for bit in range(width - 1, -1, -1):
+      digit = (value &gt;&gt; bit) &amp; 1
+      chosen = digit ^ 1 if (digit ^ 1) in node else digit
+      current |= (chosen ^ digit) &lt;&lt; bit
+      node = node[chosen]
+    answer = max(answer, current)
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：设固定字长为 $W$，建树和查询总时间 $O(nW)$，空间 $O(nW)$。</p>
+<p><strong>易错点</strong>：字长要覆盖最大输入；有查询上界时可按上界排序后增量插入，避免在 Trie 中回溯筛值；负数需要先规定补码位宽。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/maximum-xor-with-an-element-from-array/" target="_blank" rel="noreferrer">1707. Maximum XOR With an Element From Array</a> 使用 01 Trie，但在 Trie 内按上界回溯；<a href="https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/" target="_blank" rel="noreferrer">421. Maximum XOR of Two Numbers in an Array</a></p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/bitwise-and-of-numbers-range/" target="_blank" rel="noreferrer">201. Bitwise AND of Numbers Range</a>：寻找区间端点的公共二进制前缀。</li></ul>
+</section></section><section class="chapter" id="数学与数论" data-search="数学与数论"><div class="chapter-index">02</div><h2>数学与数论</h2><h3 id="整除关系">整除关系</h3>
+<section class="algorithm" data-search="欧几里得与扩展欧几里得"><h4 id="欧几里得与扩展欧几里得">欧几里得与扩展欧几里得<a class="anchor" href="#欧几里得与扩展欧几里得" aria-label="定位到 欧几里得与扩展欧几里得">#</a></h4>
+<p><strong>解决什么</strong>：计算最大公约数、最小公倍数，求解裴蜀等式 $ax+by=\gcd(a,b)$，以及在互质条件下求模逆元。</p>
+<p><strong>核心原理</strong>：<code>gcd(a, b) = gcd(b, a % b)</code> 不断缩小问题。递归回代余数关系即可同时得到系数 <code>x, y</code>；当 <code>gcd(a, mod) == 1</code> 时，<code>x % mod</code> 是 <code>a</code> 的逆元。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def extended_gcd(a, b):
+  if b == 0:
+    return abs(a), 1 if a &gt;= 0 else -1, 0
+  gcd, next_x, next_y = extended_gcd(b, a % b)
+  return gcd, next_y, next_x - (a // b) * next_y
+
+def lcm(a, b):
+  gcd, _, _ = extended_gcd(a, b)
+  return 0 if gcd == 0 else abs(a // gcd * b)</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(\log \min(|a|,|b|))$，递归栈空间同阶。</p>
+<p><strong>易错点</strong>：模逆元只在互质时存在；负数的商和余数约定会影响回代系数；计算最小公倍数应先除后乘以降低定宽整数溢出风险。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/find-greatest-common-divisor-of-array/" target="_blank" rel="noreferrer">1979. Find Greatest Common Divisor of Array</a> 使用库函数 <code>gcd</code>；C++ 历史实现：<a href="https://leetcode.com/problems/check-if-it-is-a-good-array/" target="_blank" rel="noreferrer">1250. Check If It Is a Good Array</a> 使用裴蜀定理。仓库例题没有扩展欧几里得实证。</p>
+</section>
+<h3 id="幂与模运算">幂与模运算</h3>
+<section class="algorithm" data-search="二进制快速幂"><h4 id="二进制快速幂">二进制快速幂<a class="anchor" href="#二进制快速幂" aria-label="定位到 二进制快速幂">#</a></h4>
+<p><strong>解决什么</strong>：高效计算 $base^{exponent}$ 或模幂，并作为矩阵快速幂、组合数逆元等算法的基础。</p>
+<p><strong>核心原理</strong>：把指数按二进制拆分；当前位为 $1$ 时乘入答案，每轮将底数平方、指数右移一位。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def fast_power(base, exponent, mod=None):
+  result = 1
+  while exponent &gt; 0:
+    if exponent &amp; 1:
+      result = result * base if mod is None else result * base % mod
+    base = base * base if mod is None else base * base % mod
+    exponent &gt;&gt;= 1
+  return result</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(\log exponent)$，辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：负指数需转为倒数后处理正指数；模意义下不能直接做普通除法；底数乘法可能溢出的语言要使用更宽类型或安全乘法。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/count-good-numbers/" target="_blank" rel="noreferrer">1922. Count Good Numbers</a> 使用模快速幂；C++ 历史实现：<a href="https://leetcode.com/problems/powx-n/" target="_blank" rel="noreferrer">50. Pow(x, n)</a>、<a href="https://leetcode.com/problems/super-pow/" target="_blank" rel="noreferrer">372. Super Pow</a></p>
+</section>
+<h3 id="素数预处理">素数预处理</h3>
+<section class="algorithm" data-search="埃氏筛"><h4 id="埃氏筛">埃氏筛<a class="anchor" href="#埃氏筛" aria-label="定位到 埃氏筛">#</a></h4>
+<p><strong>解决什么</strong>：批量判断不超过上界的素数、枚举区间素数，或为质因数分解和计数预处理。</p>
+<p><strong>核心原理</strong>：从小到大扫描；发现素数 <code>prime</code> 后，从 <code>prime * prime</code> 开始标记其倍数。更小倍数已经被更小质因子处理。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def eratosthenes(limit):
+  is_prime = bytearray(b&quot;\x01&quot;) * (limit + 1)
+  if limit &gt;= 0:
+    is_prime[0] = 0
+  if limit &gt;= 1:
+    is_prime[1] = 0
+  for prime in range(2, int(limit ** 0.5) + 1):
+    if is_prime[prime]:
+      start = prime * prime
+      is_prime[start:limit + 1:prime] = b&quot;\x00&quot; * (((limit - start) // prime) + 1)
+  return is_prime</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n\log\log n)$，空间 $O(n)$。</p>
+<p><strong>易错点</strong>：<code>0</code> 和 <code>1</code> 不是素数；切片赋值长度必须与左侧完全一致；单个大数判素时建整张筛表未必合适，应考虑试除或更强判素法。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/closest-prime-numbers-in-range/" target="_blank" rel="noreferrer">2523. Closest Prime Numbers in Range</a>，本地筛从 <code>prime</code> 而非 <code>prime * prime</code> 开始，结论正确但重复标记更多；C++ 历史实现：<a href="https://leetcode.com/problems/count-primes/" target="_blank" rel="noreferrer">204. Count Primes</a></p>
+</section>
+<h3 id="组合计数">组合计数</h3>
+<section class="algorithm" data-search="阶乘逆元求组合数"><h4 id="阶乘逆元求组合数">阶乘逆元求组合数<a class="anchor" href="#阶乘逆元求组合数" aria-label="定位到 阶乘逆元求组合数">#</a></h4>
+<p><strong>解决什么</strong>：在质数模数下多次计算组合数 $\binom{n}{k}$，并用于排列计数、路径计数和容斥。</p>
+<p><strong>核心原理</strong>：预处理阶乘与逆阶乘，利用 $\binom{n}{k}=n!/(k!(n-k)!)$；质数模数下由费马小定理用快速幂求阶乘逆元。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def combination_table(limit, mod):
+  factorial = [1] * (limit + 1)
+  for value in range(1, limit + 1):
+    factorial[value] = factorial[value - 1] * value % mod
+  inverse_factorial = [1] * (limit + 1)
+  inverse_factorial[limit] = pow(factorial[limit], mod - 2, mod)
+  for value in range(limit, 0, -1):
+    inverse_factorial[value - 1] = inverse_factorial[value] * value % mod
+
+  def choose(total, selected):
+    if selected &lt; 0 or selected &gt; total:
+      return 0
+    return factorial[total] * inverse_factorial[selected] % mod * inverse_factorial[total - selected] % mod
+  return choose</code></pre></div>
+<p><strong>复杂度</strong>：预处理时间和空间均为 $O(n)$，单次查询 $O(1)$。</p>
+<p><strong>易错点</strong>：该逆元写法要求模数为质数且阶乘不为模数的倍数；<code>k</code> 越界应返回零；“至少一个”等限制常需容斥，不能只套一次组合数。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/number-of-ways-to-reorder-array-to-get-same-bst/" target="_blank" rel="noreferrer">1569. Number of Ways to Reorder Array to Get Same BST</a> 使用组合数递推；C++ 历史实现：<a href="https://leetcode.com/problems/nth-magical-number/" target="_blank" rel="noreferrer">878. Nth Magical Number</a> 使用容斥与最小公倍数，并非组合数模板。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 本地实现：<a href="https://leetcode.com/problems/divide-two-integers/" target="_blank" rel="noreferrer">29. Divide Two Integers</a>：倍增与二进制除法。</li><li>C++ 历史实现：<a href="https://leetcode.com/problems/bulb-switcher/" target="_blank" rel="noreferrer">319. Bulb Switcher</a>：由因数配对推出仅完全平方数保留。</li></ul>
+</section></section><section class="chapter" id="矩阵与计算几何" data-search="矩阵与计算几何"><div class="chapter-index">03</div><h2>矩阵与计算几何</h2><h3 id="坐标顺序建模">坐标顺序建模</h3>
+<section class="algorithm" data-search="边界收缩与方向遍历"><h4 id="边界收缩与方向遍历">边界收缩与方向遍历<a class="anchor" href="#边界收缩与方向遍历" aria-label="定位到 边界收缩与方向遍历">#</a></h4>
+<p><strong>解决什么</strong>：螺旋、对角线或按指定方向访问矩阵，并把二维位置映射为稳定的一维顺序。</p>
+<p><strong>核心原理</strong>：螺旋遍历维护上、下、左、右四条未访问边界；每完成一条边就收缩对应边界。一般方向移动则统一用 <code>(row_delta, column_delta)</code> 并在访问前检查范围。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def spiral_order(matrix):
+  if not matrix:
+    return []
+  top, bottom = 0, len(matrix) - 1
+  left, right = 0, len(matrix[0]) - 1
+  order = []
+  while top &lt;= bottom and left &lt;= right:
+    order.extend(matrix[top][left:right + 1])
+    top += 1
+    for row in range(top, bottom + 1):
+      order.append(matrix[row][right])
+    right -= 1
+    if top &lt;= bottom:
+      order.extend(reversed(matrix[bottom][left:right + 1]))
+      bottom -= 1
+    if left &lt;= right:
+      for row in range(bottom, top - 1, -1):
+        order.append(matrix[row][left])
+      left += 1
+  return order</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(rows\cdot columns)$；除返回结果外辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：单行或单列时反向遍历前必须再次检查边界；行列下标不要混用；原地标记不能覆盖后续仍需读取的信息。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/spiral-matrix-iv/" target="_blank" rel="noreferrer">2326. Spiral Matrix IV</a>；C++ 历史实现：<a href="https://leetcode.com/problems/spiral-matrix/" target="_blank" rel="noreferrer">54. Spiral Matrix</a></p>
+</section>
+<h3 id="矩形聚合与更新">矩形聚合与更新</h3>
+<section class="algorithm" data-search="二维前缀和与二维差分"><h4 id="二维前缀和与二维差分">二维前缀和与二维差分<a class="anchor" href="#二维前缀和与二维差分" aria-label="定位到 二维前缀和与二维差分">#</a></h4>
+<p><strong>解决什么</strong>：静态矩形和查询，或批量对多个矩形加值后一次性还原完整矩阵。</p>
+<p><strong>核心原理</strong>：二维前缀用四块容斥回答矩形和；二维差分对矩形四角做 <code>+ - - +</code> 标记，最后沿两个维度累加恢复每个格子的增量。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def build_prefix(matrix):
+  rows, columns = len(matrix), len(matrix[0])
+  prefix = [[0] * (columns + 1) for _ in range(rows + 1)]
+  for row in range(rows):
+    for column in range(columns):
+      prefix[row + 1][column + 1] = (matrix[row][column] + prefix[row][column + 1]
+        + prefix[row + 1][column] - prefix[row][column])
+  return prefix
+
+def rectangle_sum(prefix, top, left, bottom, right):
+  return (prefix[bottom + 1][right + 1] - prefix[top][right + 1]
+    - prefix[bottom + 1][left] + prefix[top][left])</code></pre></div>
+<p><strong>复杂度</strong>：预处理时间和空间均为 $O(rows\cdot columns)$，单次矩形查询 $O(1)$；二维差分的每次更新 $O(1)$、最终恢复 $O(rows\cdot columns)$。</p>
+<p><strong>易错点</strong>：用额外首行首列统一边界；闭区间右下角查询要加一；差分数组需为撤销位置预留哨兵，四角符号不能写反。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/increment-submatrices-by-one/" target="_blank" rel="noreferrer">2536. Increment Submatrices by One</a>、<a href="https://leetcode.com/problems/largest-magic-square/" target="_blank" rel="noreferrer">1895. Largest Magic Square</a>；C++ 历史实现：<a href="https://leetcode.com/problems/range-sum-query-2d-immutable/" target="_blank" rel="noreferrer">304. Range Sum Query 2D - Immutable</a></p>
+</section>
+<h3 id="网格状态转移">网格状态转移</h3>
+<section class="algorithm" data-search="矩阵 dp"><h4 id="矩阵-dp">矩阵 DP<a class="anchor" href="#矩阵-dp" aria-label="定位到 矩阵 DP">#</a></h4>
+<p><strong>解决什么</strong>：统计全 $1$ 正方形、求网格路径最优值，或处理只依赖左、上、对角线等已计算邻居的状态。</p>
+<p><strong>核心原理</strong>：以格子 <code>(row, column)</code> 为右下角的最大全 $1$ 正方形边长，等于三个前驱状态最小值加一。遍历顺序必须保证所有依赖已经计算。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def count_square_submatrices(matrix):
+  rows, columns = len(matrix), len(matrix[0])
+  dp = [[0] * (columns + 1) for _ in range(rows + 1)]
+  answer = 0
+  for row in range(1, rows + 1):
+    for column in range(1, columns + 1):
+      if matrix[row - 1][column - 1] == 1:
+        dp[row][column] = 1 + min(dp[row - 1][column], dp[row][column - 1], dp[row - 1][column - 1])
+        answer += dp[row][column]
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：时间和空间均为 $O(rows\cdot columns)$；只依赖上一行时可滚动为 $O(columns)$ 空间。</p>
+<p><strong>易错点</strong>：最大边长、最大面积和正方形总数是三个不同答案；原地 DP 会修改输入；含负数的乘积路径必须同时维护最大值和最小值。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/maximum-non-negative-product-in-a-matrix/" target="_blank" rel="noreferrer">1594. Maximum Non Negative Product in a Matrix</a> 使用双状态矩阵 DP；C++ 历史实现：<a href="https://leetcode.com/problems/maximal-square/" target="_blank" rel="noreferrer">221. Maximal Square</a>、<a href="https://leetcode.com/problems/count-square-submatrices-with-all-ones/" target="_blank" rel="noreferrer">1277. Count Square Submatrices with All Ones</a></p>
+</section>
+<h3 id="平面方向判定">平面方向判定</h3>
+<section class="algorithm" data-search="叉积与有向面积"><h4 id="叉积与有向面积">叉积与有向面积<a class="anchor" href="#叉积与有向面积" aria-label="定位到 叉积与有向面积">#</a></h4>
+<p><strong>解决什么</strong>：判断三点方向、共线、线段相交和多边形面积，避免使用浮点斜率。</p>
+<p><strong>核心原理</strong>：向量 $AB$ 与 $AC$ 的叉积为 $(B_x-A_x)(C_y-A_y)-(B_y-A_y)(C_x-A_x)$；正负分别表示逆时针和顺时针，零表示共线，其绝对值是三角形面积的两倍。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def cross(origin, first, second):
+  return ((first[0] - origin[0]) * (second[1] - origin[1])
+    - (first[1] - origin[1]) * (second[0] - origin[0]))
+
+def segments_strictly_cross(a, b, c, d):
+  return (cross(a, b, c) * cross(a, b, d) &lt; 0
+    and cross(c, d, a) * cross(c, d, b) &lt; 0)</code></pre></div>
+<p><strong>复杂度</strong>：单次方向或严格相交判定时间 $O(1)$，辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：上面相交模板不含共线端点接触，完整线段相交还需包围盒与 <code>on_segment</code>；定宽整数要防坐标乘法溢出；不要用浮点斜率直接判等。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/minimum-lines-to-represent-a-line-chart/" target="_blank" rel="noreferrer">2280. Minimum Lines to Represent a Line Chart</a> 当前使用浮点斜率，并非叉积实证；C++ 历史实现：<a href="https://leetcode.com/problems/check-if-it-is-a-straight-line/" target="_blank" rel="noreferrer">1232. Check If It Is a Straight Line</a></p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/valid-square/" target="_blank" rel="noreferrer">593. Valid Square</a>：平方距离判定。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/image-overlap/" target="_blank" rel="noreferrer">835. Image Overlap</a>：坐标偏移频次统计。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/minimum-xor-path-in-a-grid/" target="_blank" rel="noreferrer">3882. Minimum XOR Path in a Grid</a>：网格路径与异或状态搜索。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/maximum-area-of-two-non-overlapping-square-submatrices/" target="_blank" rel="noreferrer">4016. Maximum Area of Two Non-Overlapping Square Submatrices</a>：二维前缀和、二分边长与不相交约束。</li></ul>
+</section></section>
+    <nav class="pager" aria-label="分册导航"><a href="04-graphs-and-structures.html"><small>上一册</small><strong>图与高级数据结构</strong></a></nav>
+  </main>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script defer src="assets/app.js"></script>
+</body>
+</html>

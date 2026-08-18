@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="处理连通性、路径查询、动态区间信息、多模式字符串和组合数据结构。">
+  <title>图与高级数据结构 · LeetCode Guidebook</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body class="reader-page" data-accent="blue">
+  <a class="skip-link" href="#main-content">跳到正文</a>
+  <aside class="sidebar">
+    <a class="brand" href="main.html"><span class="brand-mark">LC</span><span>Algorithm<br>Guidebook</span></a>
+    <div class="side-label">本册目录</div><nav><details class="side-chapter"><summary><span>图论与最短路</span><small>5</small></summary><div class="side-branch"><a class="side-overview" href="#图论与最短路">章节概览</a><details class="side-module"><summary><span>有向无环图</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#kahn-拓扑排序">Kahn 拓扑排序</a></div></details><details class="side-module"><summary><span>特殊边权最短路</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#bfs-与-0-1-bfs">BFS 与 0-1 BFS</a></div></details><details class="side-module"><summary><span>多源最短路</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#floyd-warshall">Floyd-Warshall</a></div></details><details class="side-module"><summary><span>非负权最短路</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#堆优化-dijkstra">堆优化 Dijkstra</a></div></details><details class="side-module"><summary><span>全局连通代价</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#kruskal-最小生成树">Kruskal 最小生成树</a></div></details></div></details><details class="side-chapter"><summary><span>并查集</span><small>2</small></summary><div class="side-branch"><a class="side-overview" href="#并查集">章节概览</a><details class="side-module"><summary><span>动态连通性</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#路径压缩与按大小合并">路径压缩与按大小合并</a></div></details><details class="side-module"><summary><span>多集合建模</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#坐标映射与多份并查集">坐标映射与多份并查集</a></div></details></div></details><details class="side-chapter"><summary><span>树状数组</span><small>2</small></summary><div class="side-branch"><a class="side-overview" href="#树状数组">章节概览</a><details class="side-module"><summary><span>动态前缀聚合</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#单点增加与区间求和">单点增加与区间求和</a></div></details><details class="side-module"><summary><span>有序频次统计</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#离散化加树状数组计数">离散化加树状数组计数</a></div></details></div></details><details class="side-chapter"><summary><span>线段树</span><small>3</small></summary><div class="side-branch"><a class="side-overview" href="#线段树">章节概览</a><details class="side-module"><summary><span>基础动态区间信息</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#单点修改与普通区间查询">单点修改与普通区间查询</a></div></details><details class="side-module"><summary><span>多字段节点状态</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#复杂节点合并">复杂节点合并</a></div></details><details class="side-module"><summary><span>批量区间修改</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#懒标记区间加">懒标记区间加</a></div></details></div></details><details class="side-chapter"><summary><span>字典树与字符串算法</span><small>7</small></summary><div class="side-branch"><a class="side-overview" href="#字典树与字符串算法">章节概览</a><details class="side-module"><summary><span>前缀结构</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#trie-前缀树">Trie 前缀树</a></div></details><details class="side-module"><summary><span>单模式字符串匹配</span><small>3</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#kmp-前缀函数">KMP 前缀函数</a><a class="side-algorithm" href="#z-函数">Z 函数</a><a class="side-algorithm" href="#滚动哈希">滚动哈希</a></div></details><details class="side-module"><summary><span>回文字符串</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#回文中心扩展">回文中心扩展</a><a class="side-algorithm" href="#manacher-算法">Manacher 算法</a></div></details><details class="side-module"><summary><span>多模式匹配</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#ac-自动机">AC 自动机</a></div></details></div></details><details class="side-chapter"><summary><span>设计题与数据结构</span><small>4</small></summary><div class="side-branch"><a class="side-overview" href="#设计题与数据结构">章节概览</a><details class="side-module"><summary><span>接口摊还分析</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#双栈队列">双栈队列</a></div></details><details class="side-module"><summary><span>随机访问与删除</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#动态数组加哈希索引">动态数组加哈希索引</a></div></details><details class="side-module"><summary><span>多容器协作</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#堆加多栈与延迟清理">堆加多栈与延迟清理</a></div></details><details class="side-module"><summary><span>时间版本索引</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#哈希表加有序时间轴二分">哈希表加有序时间轴二分</a></div></details></div></details></nav>
+    <a class="back-map" href="main.html">返回完整思维导图</a>
+  </aside>
+  <main id="main-content" class="reader">
+    <header class="reader-head">
+      <div class="reader-actions"><a href="main.html">思维导图</a><label class="search"><span>搜索本册</span><input type="search" data-search-input placeholder="输入算法或知识点"></label></div>
+      <div class="edition">VOLUME 04</div><h1>图与高级数据结构</h1><p>处理连通性、路径查询、动态区间信息、多模式字符串和组合数据结构。</p>
+      <div class="reader-stats"><span>6 个题型</span><span>23 个典型算法</span></div>
+    </header>
+    <div class="no-results" data-no-results hidden>没有匹配的算法，请尝试更短的关键词。</div>
+    <section class="chapter" id="图论与最短路" data-search="图论与最短路"><div class="chapter-index">01</div><h2>图论与最短路</h2><h3 id="有向无环图">有向无环图</h3>
+<section class="algorithm" data-search="kahn 拓扑排序"><h4 id="kahn-拓扑排序">Kahn 拓扑排序<a class="anchor" href="#kahn-拓扑排序" aria-label="定位到 Kahn 拓扑排序">#</a></h4>
+<p><strong>解决什么</strong>：课程依赖、任务先后关系、DAG 上的动态规划，以及检测有向图是否存在环。</p>
+<p><strong>核心原理</strong>：把所有入度为零的节点入队；每取出一个节点就删除它的出边，并把新出现的零入度节点入队。最终处理数少于节点总数就说明存在环。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import deque
+
+def topological_order(node_count, edges):
+  graph = [[] for _ in range(node_count)]
+  indegree = [0] * node_count
+  for source, target in edges:
+    graph[source].append(target)
+    indegree[target] += 1
+  queue = deque(node for node in range(node_count) if indegree[node] == 0)
+  order = []
+  while queue:
+    node = queue.popleft()
+    order.append(node)
+    for neighbor in graph[node]:
+      indegree[neighbor] -= 1
+      if indegree[neighbor] == 0:
+        queue.append(neighbor)
+  return order if len(order) == node_count else []</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(V+E)$，空间 $O(V+E)$。</p>
+<p><strong>易错点</strong>：边方向必须与依赖含义一致；不能只从一个零入度节点开始；DAG DP 应在节点出队时转移。Python 队列要用 <code>deque</code>。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/largest-color-value-in-a-directed-graph/" target="_blank" rel="noreferrer">1857. Largest Color Value in a Directed Graph</a> 使用反向边与出度归零的等价 Kahn 过程，并叠加 26 维 DAG DP；本地队列为 <code>list.pop(0)</code>，可改为 <code>deque</code>。Python 对照实现：<a href="https://leetcode.com/problems/course-schedule/" target="_blank" rel="noreferrer">207. Course Schedule</a> 使用依赖集合传播检测环，并非拓扑排序。</p>
+</section>
+<h3 id="特殊边权最短路">特殊边权最短路</h3>
+<section class="algorithm" data-search="bfs 与 0-1 bfs"><h4 id="bfs-与-0-1-bfs">BFS 与 0-1 BFS<a class="anchor" href="#bfs-与-0-1-bfs" aria-label="定位到 BFS 与 0-1 BFS">#</a></h4>
+<p><strong>解决什么</strong>：无权图最少步数，以及边权只为 $0/1$ 时的最短路。</p>
+<p><strong>核心原理</strong>：普通 BFS 按层扩展；0-1 BFS 松弛后把权重为 0 的节点放队首、权重为 1 的节点放队尾，使弹出顺序保持非降距离。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import deque
+
+def zero_one_bfs(graph, start):
+  distance = [float(&quot;inf&quot;)] * len(graph)
+  distance[start] = 0
+  queue = deque([start])
+  while queue:
+    node = queue.popleft()
+    for neighbor, weight in graph[node]:
+      candidate = distance[node] + weight
+      if candidate &lt; distance[neighbor]:
+        distance[neighbor] = candidate
+        if weight == 0:
+          queue.appendleft(neighbor)
+        else:
+          queue.append(neighbor)
+  return distance</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(V+E)$，空间 $O(V)$；每条边权必须属于 $\{0,1\}$。</p>
+<p><strong>易错点</strong>：0 权边放队首、1 权边放队尾；不能用普通 FIFO BFS 处理不同边权；允许重复松弛时应以更短距离为准。</p>
+<p><strong>对应例题</strong>：Python 对照实现：<a href="https://leetcode.com/problems/minimum-obstacle-removal-to-reach-corner/" target="_blank" rel="noreferrer">2290. Minimum Obstacle Removal to Reach Corner</a> 采用 0-1 BFS 的两端入队逻辑，但以列表头删、头插实现，最坏复杂度高于标准 <code>deque</code> 模板。</p>
+</section>
+<h3 id="多源最短路">多源最短路</h3>
+<section class="algorithm" data-search="floyd-warshall"><h4 id="floyd-warshall">Floyd-Warshall<a class="anchor" href="#floyd-warshall" aria-label="定位到 Floyd-Warshall">#</a></h4>
+<p><strong>解决什么</strong>：求稠密图中任意两点之间的最短距离；也可把距离改成布尔可达性，求有向图的传递闭包。它允许负权边，但不能正确处理最短路经过负权环的情况。</p>
+<p><strong>核心原理</strong>：动态规划状态 <code>distance[source][target]</code> 表示当前允许经过指定中间点集合时的最短距离。依次把节点 <code>middle</code> 加入可用中间点，转移为“保持原路径”与“经过 <code>middle</code>”二者的较小值。<code>middle</code> 必须放在最外层循环，才能保证本轮读取的是只使用前一阶段中间点的闭包结果。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def floyd_warshall(node_count, edges):
+  infinity = float(&quot;inf&quot;)
+  distance = [[infinity] * node_count for _ in range(node_count)]
+  for node in range(node_count):
+    distance[node][node] = 0
+  for source, target, weight in edges:
+    distance[source][target] = min(distance[source][target], weight)
+
+  for middle in range(node_count):
+    for source in range(node_count):
+      if distance[source][middle] == infinity:
+        continue
+      for target in range(node_count):
+        candidate = distance[source][middle] + distance[middle][target]
+        if candidate &lt; distance[source][target]:
+          distance[source][target] = candidate
+  return distance</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(V^3)$，空间 $O(V^2)$；通常适合 $V \le 400$ 左右的稠密图或大量两点查询，具体边界取决于语言与常数。</p>
+<p><strong>易错点</strong>：中间点循环必须在最外层；重边初始化要取最小值；无向图需要同时写入两个方向；不可达状态不能参与加法。运行结束后若存在 <code>distance[node][node] &lt; 0</code>，说明该节点可达某个负权环。</p>
+<p><strong>对应例题</strong>：Python 对照实现：<a href="https://leetcode.com/problems/course-schedule-iv/" target="_blank" rel="noreferrer">1462. Course Schedule IV</a> 求课程依赖的传递闭包，但本地代码采用集合传播而非标准 Floyd 三重循环；将距离矩阵替换为布尔矩阵并使用 <code>reachable[source][target] |= reachable[source][middle] and reachable[middle][target]</code>，即可得到 Floyd-Warshall 的可达性版本。</p>
+</section>
+<h3 id="非负权最短路">非负权最短路</h3>
+<section class="algorithm" data-search="堆优化 dijkstra"><h4 id="堆优化-dijkstra">堆优化 Dijkstra<a class="anchor" href="#堆优化-dijkstra" aria-label="定位到 堆优化 Dijkstra">#</a></h4>
+<p><strong>解决什么</strong>：边权非负的单源最短路，以及把乘积概率等可单调扩展目标改写为“每次确定当前最优节点”的路径问题。</p>
+<p><strong>核心原理</strong>：小顶堆始终弹出当前距离最小的状态；若堆中距离已落后于 <code>distance[node]</code>，就是过期状态。非负边保证节点以最短距离出堆后无需被更短路径推翻。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from heapq import heappop, heappush
+
+def dijkstra(graph, start):
+  distance = [float(&quot;inf&quot;)] * len(graph)
+  distance[start] = 0
+  heap = [(0, start)]
+  while heap:
+    current, node = heappop(heap)
+    if current != distance[node]:
+      continue
+    for neighbor, weight in graph[node]:
+      candidate = current + weight
+      if candidate &lt; distance[neighbor]:
+        distance[neighbor] = candidate
+        heappush(heap, (candidate, neighbor))
+  return distance</code></pre></div>
+<p><strong>复杂度</strong>：邻接表加二叉堆为 $O((V+E)\log V)$ 时间、$O(V+E)$ 空间。</p>
+<p><strong>易错点</strong>：存在负权边时不能使用 Dijkstra；同一节点可多次入堆，必须跳过过期状态；带方向、剩余资源等约束时，完整状态才是图节点。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/path-with-maximum-probability/" target="_blank" rel="noreferrer">1514. Path with Maximum Probability</a> 使用最大堆式概率松弛。Python 对照实现：<a href="https://leetcode.com/problems/network-delay-time/" target="_blank" rel="noreferrer">743. Network Delay Time</a> 实际使用 FIFO 队列反复松弛，类似 SPFA，并非 Dijkstra。</p>
+</section>
+<h3 id="全局连通代价">全局连通代价</h3>
+<section class="algorithm" data-search="kruskal 最小生成树"><h4 id="kruskal-最小生成树">Kruskal 最小生成树<a class="anchor" href="#kruskal-最小生成树" aria-label="定位到 Kruskal 最小生成树">#</a></h4>
+<p><strong>解决什么</strong>：用最小总边权连接无向图全部节点；目标是整棵生成树的总成本，不是从某个源点到各点的最短距离。</p>
+<p><strong>核心原理</strong>：按边权从小到大扫描，只有当边的两端属于不同连通分量时才选边并合并集合。交换论证中的割性质保证跨越任意割的最轻安全边可进入某棵 MST。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def kruskal(node_count, edges):
+  dsu = DSU(node_count)
+  total = used = 0
+  for weight, first, second in sorted(edges):
+    if dsu.union(first, second):
+      total += weight
+      used += 1
+      if used == node_count - 1:
+        return total
+  return -1</code></pre></div>
+<p><strong>复杂度</strong>：排序 $O(E\log E)$，并查集操作总计 $O(E\alpha(V))$，空间 $O(V+E)$。</p>
+<p><strong>易错点</strong>：无向边只需参与一次排序；必须选到恰好 $V-1$ 条边才连通；最小生成树与最短路径树的优化目标不同。</p>
+<p><strong>对应例题</strong>：Python 对照实现：<a href="https://leetcode.com/problems/min-cost-to-connect-all-points/" target="_blank" rel="noreferrer">1584. Min Cost to Connect All Points</a> 按边权执行 Kruskal 思路，但以集合列表线性查找、合并连通分量，并非并查集实现。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 本地实现：<a href="https://leetcode.com/problems/clone-graph/" target="_blank" rel="noreferrer">133. Clone Graph</a>：图遍历与复制。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/is-graph-bipartite/" target="_blank" rel="noreferrer">785. Is Graph Bipartite?</a>：递归染色判断二分图。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/reconstruct-itinerary/" target="_blank" rel="noreferrer">332. Reconstruct Itinerary</a>：欧拉路径。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/shortest-path-with-at-most-k-consecutive-identical-characters/" target="_blank" rel="noreferrer">3970. Shortest Path With At Most K Consecutive Identical Characters</a>：把连续字符限制并入路径状态。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/minimum-cost-path-with-alternating-directions-iii/" target="_blank" rel="noreferrer">4003. Minimum Cost Path with Alternating Directions III</a>：网格位置、方向奇偶状态与加权最短路。</li></ul>
+</section></section><section class="chapter" id="并查集" data-search="并查集"><div class="chapter-index">02</div><h2>并查集</h2><h3 id="动态连通性">动态连通性</h3>
+<section class="algorithm" data-search="路径压缩与按大小合并"><h4 id="路径压缩与按大小合并">路径压缩与按大小合并<a class="anchor" href="#路径压缩与按大小合并" aria-label="定位到 路径压缩与按大小合并">#</a></h4>
+<p><strong>解决什么</strong>：只增加连接时，快速判断两个元素是否连通、合并集合、统计连通分量或检测新增边是否成环。</p>
+<p><strong>核心原理</strong>：<code>find</code> 把查询路径上的节点直接指向根；<code>union</code> 总把较小树挂到较大树根下。两种优化共同避免父指针链退化。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>class DSU:
+  def __init__(self, size):
+    self.parent = list(range(size))
+    self.size = [1] * size
+    self.components = size
+
+  def find(self, node):
+    while node != self.parent[node]:
+      self.parent[node] = self.parent[self.parent[node]]
+      node = self.parent[node]
+    return node
+
+  def union(self, first, second):
+    first_root, second_root = self.find(first), self.find(second)
+    if first_root == second_root:
+      return False
+    if self.size[first_root] &lt; self.size[second_root]:
+      first_root, second_root = second_root, first_root
+    self.parent[second_root] = first_root
+    self.size[first_root] += self.size[second_root]
+    self.components -= 1
+    return True</code></pre></div>
+<p><strong>复杂度</strong>：初始化 $O(n)$；任意 $m$ 次合并与查找总计 $O(m\alpha(n))$，空间 $O(n)$。</p>
+<p><strong>易错点</strong>：按大小比较的是根节点；<code>union</code> 应返回是否真的合并，便于识别冗余边；普通并查集不直接支持在线删边。</p>
+<p><strong>对应例题</strong>：Python 对照实现：<a href="https://leetcode.com/problems/redundant-connection/" target="_blank" rel="noreferrer">684. Redundant Connection</a> 使用路径压缩并通过 <code>union</code> 返回值检测环，但未按大小合并。</p>
+</section>
+<h3 id="多集合建模">多集合建模</h3>
+<section class="algorithm" data-search="坐标映射与多份并查集"><h4 id="坐标映射与多份并查集">坐标映射与多份并查集<a class="anchor" href="#坐标映射与多份并查集" aria-label="定位到 坐标映射与多份并查集">#</a></h4>
+<p><strong>解决什么</strong>：元素不是连续整数、不同类型实体需要落在同一连通模型，或多组用户共享部分边但各自维护连通性。</p>
+<p><strong>核心原理</strong>：先把邮箱、行列坐标等实体映射到并查集节点；共享边优先合并，再复制或分别维护多份 DSU。答案通常由成功合并次数、剩余分量数或根节点分组得到。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def removable_shared_edges(node_count, edges):
+  alice, bob = DSU(node_count), DSU(node_count)
+  used = 0
+  for edge_type, first, second in sorted(edges, reverse=True):
+    first -= 1
+    second -= 1
+    if edge_type == 3:
+      merged = alice.union(first, second)
+      bob.union(first, second)
+      used += merged
+    elif edge_type == 1:
+      used += alice.union(first, second)
+    else:
+      used += bob.union(first, second)
+  if alice.components != 1 or bob.components != 1:
+    return -1
+  return len(edges) - used</code></pre></div>
+<p><strong>复杂度</strong>：排序按边类型可用三次线性扫描；一般写法为 $O(E\log E+E\alpha(V))$ 时间、$O(V)$ 空间。</p>
+<p><strong>易错点</strong>：共享边必须先处理；行和列编号空间要避免冲突；按根分组前应再次 <code>find</code> 完成压缩；两份 DSU 都必须最终连通。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/" target="_blank" rel="noreferrer">1579. Remove Max Number of Edges to Keep Graph Fully Traversable</a> 使用共享边优先与双并查集，但本地 DSU 只有路径压缩、没有按大小合并。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 本地实现：<a href="https://leetcode.com/problems/number-of-provinces/" target="_blank" rel="noreferrer">547. Friend Circles</a>：连通分量计数。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/accounts-merge/" target="_blank" rel="noreferrer">721. Accounts Merge</a>：邮箱到账户的集合合并。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/" target="_blank" rel="noreferrer">947. Most Stones Removed with Same Row or Column</a>：行列坐标连通建模。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/satisfiability-of-equality-equations/" target="_blank" rel="noreferrer">990. Satisfiability of Equality Equations</a>：先合并等式，再检查不等式。</li></ul>
+<p>&lt;a id=&quot;深度优先搜索与广度优先搜索&quot;&gt;&lt;/a&gt;</p>
+</section></section><section class="chapter" id="树状数组" data-search="树状数组"><div class="chapter-index">03</div><h2>树状数组</h2><p>树状数组（Fenwick Tree）用紧凑数组维护可差分的前缀信息。它的功能比线段树窄，但代码短、常数小，是动态前缀和与计数问题的常用结构。</p>
+<h3 id="动态前缀聚合">动态前缀聚合</h3>
+<section class="algorithm" data-search="单点增加与区间求和"><h4 id="单点增加与区间求和">单点增加与区间求和<a class="anchor" href="#单点增加与区间求和" aria-label="定位到 单点增加与区间求和">#</a></h4>
+<p><strong>解决什么</strong>：数组频繁单点修改，同时反复查询前缀和或任意区间和。</p>
+<p><strong>核心原理</strong>：<code>index &amp; -index</code> 是节点管辖区间长度。更新时向更大的父区间跳转，查询时向前拆分成互不重叠区间；区间和由两个前缀和作差。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>class FenwickTree:
+  def __init__(self, size):
+    self.size = size
+    self.tree = [0] * (size + 1)
+
+  def add(self, index, delta):
+    index += 1
+    while index &lt;= self.size:
+      self.tree[index] += delta
+      index += index &amp; -index
+
+  def prefix_sum(self, right):
+    total = 0
+    while right &gt; 0:
+      total += self.tree[right]
+      right -= right &amp; -right
+    return total
+
+  def range_sum(self, left, right):
+    return self.prefix_sum(right + 1) - self.prefix_sum(left)</code></pre></div>
+<p><strong>复杂度</strong>：单点增加、前缀查询和区间查询均为 $O(\log n)$；空间 $O(n)$，逐点建树为 $O(n\log n)$。</p>
+<p><strong>易错点</strong>：内部下标必须从 <code>1</code> 开始；模板的 <code>prefix_sum(right)</code> 计算半开区间 <code>[0, right)</code>；赋值更新要保存原值并加入 <code>new_value - old_value</code>。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="noreferrer">307. Range Sum Query - Mutable - Fenwick Tree</a></p>
+</section>
+<h3 id="有序频次统计">有序频次统计</h3>
+<section class="algorithm" data-search="离散化加树状数组计数"><h4 id="离散化加树状数组计数">离散化加树状数组计数<a class="anchor" href="#离散化加树状数组计数" aria-label="定位到 离散化加树状数组计数">#</a></h4>
+<p><strong>解决什么</strong>：扫描过程中统计此前严格更小、更大或落在某个值域区间内的元素数量。</p>
+<p><strong>核心原理</strong>：先把值映射为排名，再让树状数组维护每个排名出现次数；前缀查询得到更小元素数，总数减去不大于当前值的数量得到更大元素数。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def count_smaller_before(nums):
+  ordered = sorted(set(nums))
+  rank = {value: index for index, value in enumerate(ordered)}
+  bit = FenwickTree(len(ordered))
+  answer = []
+  for value in nums:
+    index = rank[value]
+    answer.append(bit.prefix_sum(index))
+    bit.add(index, 1)
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：离散化 $O(n\log n)$，扫描 $O(n\log n)$，空间 $O(n)$。</p>
+<p><strong>易错点</strong>：严格更小查询不应包含当前排名；重复值必须映射到同一排名；先查询再插入可避免把当前元素统计进去。</p>
+<p><strong>对应例题</strong>：Python 对照实现：<a href="https://leetcode.com/problems/create-sorted-array-through-instructions/" target="_blank" rel="noreferrer">1649. Create Sorted Array through Instructions</a> 当前使用 <code>bisect + list</code>，可按本模板优化到 $O(n\log n)$，但本地源码不是树状数组实证。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="noreferrer">307. Range Sum Query - Mutable - Naive</a>：$O(1)$ 赋值、$O(n)$ 区间遍历的朴素基线。</li></ul>
+</section></section><section class="chapter" id="线段树" data-search="线段树"><div class="chapter-index">04</div><h2>线段树</h2><p>线段树把数组递归划分为若干区间，用树节点保存区间信息，适合处理<strong>频繁修改后仍要反复查询区间结果</strong>的问题。只要区间答案能够由左右子区间合并，就可以考虑线段树。</p>
+<h3 id="基础动态区间信息">基础动态区间信息</h3>
+<section class="algorithm" data-search="单点修改与普通区间查询"><h4 id="单点修改与普通区间查询">单点修改与普通区间查询<a class="anchor" href="#单点修改与普通区间查询" aria-label="定位到 单点修改与普通区间查询">#</a></h4>
+<p><strong>解决什么</strong>：数组会单点变化，需要在线查询任意区间的和、最大值或最小值。</p>
+<p><strong>核心原理</strong>：叶子保存单个位置，父节点由两个子节点合并。单点修改沿祖先链重新计算；区间查询将目标拆成 $O(\log n)$ 个树节点并合并。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>class MaxSegmentTree:
+  def __init__(self, nums):
+    self.size = 1
+    while self.size &lt; len(nums):
+      self.size *= 2
+    self.tree = [float(&quot;-inf&quot;)] * (2 * self.size)
+    self.tree[self.size:self.size + len(nums)] = nums
+    for node in range(self.size - 1, 0, -1):
+      self.tree[node] = max(self.tree[node * 2], self.tree[node * 2 + 1])
+
+  def update(self, index, value):
+    node = self.size + index
+    self.tree[node] = value
+    node //= 2
+    while node:
+      self.tree[node] = max(self.tree[node * 2], self.tree[node * 2 + 1])
+      node //= 2
+
+  def query(self, left, right):
+    result = float(&quot;-inf&quot;)
+    left += self.size
+    right += self.size
+    while left &lt; right:
+      if left &amp; 1:
+        result = max(result, self.tree[left])
+        left += 1
+      if right &amp; 1:
+        right -= 1
+        result = max(result, self.tree[right])
+      left //= 2
+      right //= 2
+    return result</code></pre></div>
+<p><strong>复杂度</strong>：建树 $O(n)$；单点修改和区间查询 $O(\log n)$；空间 $O(n)$。</p>
+<p><strong>易错点</strong>：模板查询的是半开区间 <code>[left, right)</code>；最大值查询单位元是负无穷；值域线段树的下标是数值排名，不一定是原数组位置。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/longest-increasing-subsequence-ii/" target="_blank" rel="noreferrer">2407. Longest Increasing Subsequence II</a>：查询值域最大 DP 值后单点更新。</p>
+</section>
+<h3 id="多字段节点状态">多字段节点状态</h3>
+<section class="algorithm" data-search="复杂节点合并"><h4 id="复杂节点合并">复杂节点合并<a class="anchor" href="#复杂节点合并" aria-label="定位到 复杂节点合并">#</a></h4>
+<p><strong>解决什么</strong>：区间答案不是单个和或最值，而要同时维护前缀、后缀、边界特征和区间最优值。</p>
+<p><strong>核心原理</strong>：先定义节点不变量，再设计满足结合律的 <code>merge</code>。父节点的内部最优值来自左子树、右子树或跨越中点的组合。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def merge(left, right):
+  if left[0] == 0:
+    return right
+  if right[0] == 0:
+    return left
+  left_length, left_char, left_right_char, left_prefix, left_suffix, left_best = left
+  right_length, right_left_char, right_char, right_prefix, right_suffix, right_best = right
+  prefix, suffix = left_prefix, right_suffix
+  best = max(left_best, right_best)
+  if left_right_char == right_left_char:
+    best = max(best, left_suffix + right_prefix)
+    if left_prefix == left_length:
+      prefix += right_prefix
+    if right_suffix == right_length:
+      suffix += left_suffix
+  return (
+    left_length + right_length,
+    left_char,
+    right_char,
+    prefix,
+    suffix,
+    best,
+  )</code></pre></div>
+<p><strong>复杂度</strong>：若节点字段数固定，合并 $O(1)$，建树 $O(n)$，单点修改与区间查询 $O(\log n)$，空间 $O(n)$。</p>
+<p><strong>易错点</strong>：空节点必须有明确合并语义；跨中点前先检查两侧边界能否连接；只有整个左段同字符时前缀才能延伸，后缀同理；字段顺序要保持一致。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/longest-substring-of-one-repeating-character/" target="_blank" rel="noreferrer">2213. Longest Substring of One Repeating Character</a>：本地实现维护区间长度、左右字符、同字符前后缀和最长段，并在每次字符修改后沿祖先链执行 <code>pull</code>。</p>
+</section>
+<h3 id="批量区间修改">批量区间修改</h3>
+<section class="algorithm" data-search="懒标记区间加"><h4 id="懒标记区间加">懒标记区间加<a class="anchor" href="#懒标记区间加" aria-label="定位到 懒标记区间加">#</a></h4>
+<p><strong>解决什么</strong>：大量区间整体增加，同时查询区间和、最小值或最大值，不能逐个更新叶子。</p>
+<p><strong>核心原理</strong>：完整覆盖时直接更新当前节点并累积懒标记；只有继续访问子节点时才下推。父节点始终反映已包含标记后的真实区间信息。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>class LazyRangeSumTree:
+  def __init__(self, size):
+    self.size = size
+    self.tree = [0] * (4 * size)
+    self.lazy = [0] * (4 * size)
+
+  def _apply(self, node, left, right, delta):
+    self.tree[node] += (right - left + 1) * delta
+    self.lazy[node] += delta
+
+  def _push(self, node, left, right):
+    if self.lazy[node] == 0 or left == right:
+      return
+    middle = (left + right) // 2
+    self._apply(node * 2, left, middle, self.lazy[node])
+    self._apply(node * 2 + 1, middle + 1, right, self.lazy[node])
+    self.lazy[node] = 0
+
+  def add(self, query_left, query_right, delta, node=1, left=0, right=None):
+    if right is None:
+      right = self.size - 1
+    if query_right &lt; left or right &lt; query_left:
+      return
+    if query_left &lt;= left and right &lt;= query_right:
+      self._apply(node, left, right, delta)
+      return
+    self._push(node, left, right)
+    middle = (left + right) // 2
+    self.add(query_left, query_right, delta, node * 2, left, middle)
+    self.add(query_left, query_right, delta, node * 2 + 1, middle + 1, right)
+    self.tree[node] = self.tree[node * 2] + self.tree[node * 2 + 1]
+
+  def query(self, query_left, query_right, node=1, left=0, right=None):
+    if right is None:
+      right = self.size - 1
+    if query_right &lt; left or right &lt; query_left:
+      return 0
+    if query_left &lt;= left and right &lt;= query_right:
+      return self.tree[node]
+    self._push(node, left, right)
+    middle = (left + right) // 2
+    return self.query(query_left, query_right, node * 2, left, middle) + self.query(
+      query_left, query_right, node * 2 + 1, middle + 1, right
+    )</code></pre></div>
+<p><strong>复杂度</strong>：建树 $O(n)$；区间修改和区间查询均为 $O(\log n)$；空间 $O(n)$。</p>
+<p><strong>易错点</strong>：区间和应用标记时必须乘区间长度，最值则不乘；访问子节点前先下推；区间赋值与区间加的标记复合有先后顺序，不能照搬单一加法标记。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/zero-array-transformation-iii/" target="_blank" rel="noreferrer">3362. Zero Array Transformation III</a>：本地 <code>SegmentTree</code> 使用区间加懒标记并维护区间最小值。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/block-placement-queries/" target="_blank" rel="noreferrer">3161. Block Placement Queries</a>：线段树维护障碍物间距最大值并处理在线查询。</li><li>Python 实证：<a href="https://leetcode.com/problems/fruits-into-baskets-iii/" target="_blank" rel="noreferrer">3479. Fruits Into Baskets III</a>：维护可用篮子的区间最大容量，动态选择并删除位置。</li></ul>
+</section></section><section class="chapter" id="字典树与字符串算法" data-search="字典树与字符串算法"><div class="chapter-index">05</div><h2>字典树与字符串算法</h2><p>字符串算法的关键不是背诵函数名，而是先判断查询模型：单模式还是多模式、只匹配一次还是大量比较、是否要求确定性、是否关心前缀或回文结构。不同模型决定应使用 Trie、KMP、Z、哈希还是回文算法。</p>
+<h3 id="前缀结构">前缀结构</h3>
+<section class="algorithm" data-search="trie 前缀树"><h4 id="trie-前缀树">Trie 前缀树<a class="anchor" href="#trie-前缀树" aria-label="定位到 Trie 前缀树">#</a></h4>
+<p><strong>解决什么</strong>：动态插入单词，查询完整单词或公共前缀；也可扩展到通配符搜索、网格多词搜索和 01 Trie。</p>
+<p><strong>核心原理</strong>：每条根到节点的路径代表一个前缀，相同前缀共享节点。节点必须额外记录是否为某个完整单词的结尾。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>class TrieNode:
+  def __init__(self):
+    self.children = {}
+    self.is_word = False
+
+class Trie:
+  def __init__(self):
+    self.root = TrieNode()
+
+  def insert(self, word):
+    node = self.root
+    for char in word:
+      node = node.children.setdefault(char, TrieNode())
+    node.is_word = True
+
+  def search(self, word):
+    node = self.root
+    for char in word:
+      if char not in node.children:
+        return False
+      node = node.children[char]
+    return node.is_word</code></pre></div>
+<p><strong>复杂度</strong>：长度为 $L$ 的字符串，插入和查询均为 $O(L)$；空间与所有互异前缀的字符总数成正比。</p>
+<p><strong>易错点</strong>：到达路径末端不代表单词存在，必须检查 <code>is_word</code>；字符集固定且较小时可用数组换取更低常数；回溯搜索应直接携带当前 Trie 节点，避免每步从根重复查询。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/implement-trie-prefix-tree/" target="_blank" rel="noreferrer">208. Implement Trie</a></li><li>Python 实证：<a href="https://leetcode.com/problems/design-add-and-search-words-data-structure/" target="_blank" rel="noreferrer">211. Add and Search Word</a>：通配符 DFS</li><li>Python 实证：<a href="https://leetcode.com/problems/word-search-ii/" target="_blank" rel="noreferrer">212. Word Search II</a>：Trie + 网格回溯</li></ul>
+</section>
+<h3 id="单模式字符串匹配">单模式字符串匹配</h3>
+<section class="algorithm" data-search="kmp 前缀函数"><h4 id="kmp-前缀函数">KMP 前缀函数<a class="anchor" href="#kmp-前缀函数" aria-label="定位到 KMP 前缀函数">#</a></h4>
+<p><strong>解决什么</strong>：在线性时间内寻找模式串出现位置、计算最长相等真前后缀、判断字符串周期。</p>
+<p><strong>核心原理</strong>：<code>prefix[i]</code> 表示 <code>text[:i + 1]</code> 的最长相等真前后缀长度。失配时令 <code>matched = prefix[matched - 1]</code>，沿已经计算出的边界继续尝试，因此文本指针不会回退。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def prefix_function(text):
+  prefix = [0] * len(text)
+  for right in range(1, len(text)):
+    matched = prefix[right - 1]
+    while matched &gt; 0 and text[right] != text[matched]:
+      matched = prefix[matched - 1]
+    if text[right] == text[matched]:
+      matched += 1
+    prefix[right] = matched
+  return prefix
+
+def kmp_search(text, pattern):
+  if not pattern:
+    return 0
+  prefix = prefix_function(pattern)
+  matched = 0
+  for index, char in enumerate(text):
+    while matched &gt; 0 and char != pattern[matched]:
+      matched = prefix[matched - 1]
+    if char == pattern[matched]:
+      matched += 1
+    if matched == len(pattern):
+      return index - len(pattern) + 1
+  return -1</code></pre></div>
+<p><strong>复杂度</strong>：预处理与匹配总时间 $O(n + m)$；空间 $O(m)$。</p>
+<p><strong>易错点</strong>：前缀必须是真前缀，不能等于整个字符串；失配跳转使用 <code>prefix[matched - 1]</code>；找到一次匹配后若要继续寻找，应把 <code>matched</code> 退到 <code>prefix[matched - 1]</code>。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>Python 标准实现：<a href="https://leetcode.com/problems/longest-happy-prefix/" target="_blank" rel="noreferrer">1392. Longest Happy Prefix KMP</a></li><li>近似 / 非标准实现：<a href="https://leetcode.com/problems/longest-happy-prefix/" target="_blank" rel="noreferrer">1392. Longest Happy Prefix</a> 当前为切片枚举，最坏 $O(n^2)$</li></ul>
+</section>
+<section class="algorithm" data-search="z 函数"><h4 id="z-函数">Z 函数<a class="anchor" href="#z-函数" aria-label="定位到 Z 函数">#</a></h4>
+<p><strong>解决什么</strong>：计算每个后缀与原串的最长公共前缀，适合模式匹配、前缀贡献、周期判断和“模式串 + 文本”建模。</p>
+<p><strong>核心原理</strong>：维护当前最靠右的匹配区间 <code>[left, right]</code>。位置落在区间内时先复用对应的 Z 值，只有可能越过右边界时才继续逐字符扩展。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def z_function(text):
+  size = len(text)
+  z = [0] * size
+  left = right = 0
+  for index in range(1, size):
+    if index &lt;= right:
+      z[index] = min(right - index + 1, z[index - left])
+    while index + z[index] &lt; size and text[z[index]] == text[index + z[index]]:
+      z[index] += 1
+    if index + z[index] - 1 &gt; right:
+      left = index
+      right = index + z[index] - 1
+  return z</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$；空间 $O(n)$。</p>
+<p><strong>易错点</strong>：<code>z[0]</code> 取 <code>0</code> 还是 <code>n</code> 要在调用方统一；拼接模式与文本时应选不会出现在输入中的分隔符；命中位置需扣除模式和分隔符的偏移。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/sum-of-scores-of-built-strings/" target="_blank" rel="noreferrer">2223. Sum of Scores of Built Strings</a></li><li>Python 实证：<a href="https://leetcode.com/problems/find-beautiful-indices-in-the-given-array-ii/" target="_blank" rel="noreferrer">3008. Find Beautiful Indices in the Given Array II</a></li><li>Python 实证：<a href="https://leetcode.com/problems/number-of-subarrays-that-match-a-pattern-ii/" target="_blank" rel="noreferrer">3036. Number of Subarrays That Match a Pattern II</a></li></ul>
+</section>
+<section class="algorithm" data-search="滚动哈希"><h4 id="滚动哈希">滚动哈希<a class="anchor" href="#滚动哈希" aria-label="定位到 滚动哈希">#</a></h4>
+<p><strong>解决什么</strong>：大量比较定长或任意子串、二分最长公共前缀、查找重复子串。</p>
+<p><strong>核心原理</strong>：把字符串视为多项式，预处理前缀哈希与底数幂，使任意子串哈希可以 $O(1)$ 取得。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>class RollingHash:
+  def __init__(self, text, base=911382323, mod=1_000_000_007):
+    size = len(text)
+    self.base = base
+    self.mod = mod
+    self.prefix = [0] * (size + 1)
+    self.power = [1] * (size + 1)
+    for index, char in enumerate(text):
+      self.prefix[index + 1] = (self.prefix[index] * base + ord(char)) % mod
+      self.power[index + 1] = self.power[index] * base % mod
+
+  def get(self, left, right):
+    return (self.prefix[right] - self.prefix[left] * self.power[right - left]) % self.mod</code></pre></div>
+<p><strong>复杂度</strong>：预处理 $O(n)$；单次半开区间 <code>[left, right)</code> 查询 $O(1)$；空间 $O(n)$。</p>
+<p><strong>易错点</strong>：哈希碰撞无法从理论上消除；双哈希只能降低概率。要求确定性正确时应验证原串，或改用 KMP、Z、后缀结构。区间开闭和字符编码必须统一。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/find-substring-with-given-hash-value/" target="_blank" rel="noreferrer">2156. Find Substring With Given Hash Value</a></p>
+</section>
+<h3 id="回文字符串">回文字符串</h3>
+<section class="algorithm" data-search="回文中心扩展"><h4 id="回文中心扩展">回文中心扩展<a class="anchor" href="#回文中心扩展" aria-label="定位到 回文中心扩展">#</a></h4>
+<p><strong>解决什么</strong>：枚举回文子串、求最长回文，或把回文区间与 DP 组合；适合数据规模允许 $O(n^2)$ 的场景。</p>
+<p><strong>核心原理</strong>：每个回文都有一个中心。分别以单个字符和相邻字符间隙为中心向两侧扩展，即可覆盖奇数和偶数长度回文。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def longest_palindrome_expand(text):
+  best_left = best_right = 0
+  for center in range(len(text)):
+    for left, right in ((center, center), (center, center + 1)):
+      while left &gt;= 0 and right &lt; len(text) and text[left] == text[right]:
+        if right - left &gt; best_right - best_left:
+          best_left, best_right = left, right
+        left -= 1
+        right += 1
+  return text[best_left:best_right + 1]</code></pre></div>
+<p><strong>复杂度</strong>：时间最坏 $O(n^2)$；除结果外空间 $O(1)$。</p>
+<p><strong>易错点</strong>：必须分别处理奇偶中心；与 DP 组合时要明确发现回文区间的顺序是否满足状态依赖。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/maximum-number-of-non-overlapping-palindrome-substrings/" target="_blank" rel="noreferrer">2472. Maximum Number of Non-overlapping Palindrome Substrings</a></p>
+</section>
+<section class="algorithm" data-search="manacher 算法"><h4 id="manacher-算法">Manacher 算法<a class="anchor" href="#manacher-算法" aria-label="定位到 Manacher 算法">#</a></h4>
+<p><strong>解决什么</strong>：在线性时间内计算所有位置的回文半径，进而求最长回文子串或统计回文信息。</p>
+<p><strong>核心原理</strong>：插入分隔符统一奇偶回文。维护当前最右回文区间的中心和右边界；区间内的位置先复用关于中心对称的镜像半径，再尝试向外扩展。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def manacher(text):
+  transformed = &quot;^#&quot; + &quot;#&quot;.join(text) + &quot;#$&quot;
+  radius = [0] * len(transformed)
+  center = right = 0
+  for index in range(1, len(transformed) - 1):
+    mirror = 2 * center - index
+    if index &lt; right:
+      radius[index] = min(right - index, radius[mirror])
+    while transformed[index + radius[index] + 1] == transformed[index - radius[index] - 1]:
+      radius[index] += 1
+    if index + radius[index] &gt; right:
+      center = index
+      right = index + radius[index]
+  return radius</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$；空间 $O(n)$。</p>
+<p><strong>易错点</strong>：哨兵字符必须不与输入冲突；<code>right</code> 通常表示当前回文覆盖的开区间右端；映射回原串时，起点为 <code>(center - radius[center]) // 2</code>。</p>
+<p><strong>对应例题</strong>：当前仓库暂无 Manacher 本地实现；可将本节模板用于 5. Longest Palindromic Substring。</p>
+</section>
+<h3 id="多模式匹配">多模式匹配</h3>
+<section class="algorithm" data-search="ac 自动机"><h4 id="ac-自动机">AC 自动机<a class="anchor" href="#ac-自动机" aria-label="定位到 AC 自动机">#</a></h4>
+<p><strong>解决什么</strong>：在同一文本中同时匹配大量模式串，例如敏感词扫描；它将 Trie 的多模式共享与 KMP 的失配跳转结合起来。</p>
+<p><strong>核心原理</strong>：先建立 Trie，再用 BFS 为每个节点构造失败指针 <code>fail</code>，指向当前前缀失配后可接续的最长后缀状态。扫描文本时沿字符边和失败指针移动，并汇总当前节点输出。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import deque
+
+class AhoCorasick:
+  def __init__(self):
+    self.next = [{}]
+    self.fail = [0]
+    self.output = [[]]
+
+  def add(self, word, word_id):
+    node = 0
+    for char in word:
+      if char not in self.next[node]:
+        self.next[node][char] = len(self.next)
+        self.next.append({})
+        self.fail.append(0)
+        self.output.append([])
+      node = self.next[node][char]
+    self.output[node].append(word_id)
+
+  def build(self):
+    queue = deque(self.next[0].values())
+    while queue:
+      node = queue.popleft()
+      self.output[node].extend(self.output[self.fail[node]])
+      for char, child in self.next[node].items():
+        fallback = self.fail[node]
+        while fallback and char not in self.next[fallback]:
+          fallback = self.fail[fallback]
+        self.fail[child] = self.next[fallback].get(char, 0)
+        queue.append(child)
+
+  def find(self, text):
+    matches = []
+    node = 0
+    for index, char in enumerate(text):
+      while node and char not in self.next[node]:
+        node = self.fail[node]
+      node = self.next[node].get(char, 0)
+      for word_id in self.output[node]:
+        matches.append((index, word_id))
+    return matches</code></pre></div>
+<p><strong>复杂度</strong>：设模式总长度为 $S$、最长模式长度为 $L$、文本长度为 $T$。当前稀疏字典模板的建树为 $O(S)$，朴素失败跳转建表最坏为 $O(SL)$，扫描为均摊 $O(T + \text{匹配数})$，空间为 $O(S + \text{匹配数})$。固定字符集下补全所有转移可用 $O(SC)$ 建表，换取严格的常数时间状态转移。</p>
+<p><strong>易错点</strong>：输出需要沿失败指针继承；调用匹配前必须完成 <code>build()</code>；<a href="https://leetcode.com/problems/stream-of-characters/" target="_blank" rel="noreferrer">1032. Stream of Characters</a> 使用的是反向 Trie，没有失败指针，因此不是 AC 自动机。</p>
+<p><strong>对应例题</strong>：模板待补；当前仓库暂无使用 AC 自动机的本地题解。</p>
+</section></section><section class="chapter" id="设计题与数据结构" data-search="设计题与数据结构"><div class="chapter-index">06</div><h2>设计题与数据结构</h2><h3 id="接口摊还分析">接口摊还分析</h3>
+<section class="algorithm" data-search="双栈队列"><h4 id="双栈队列">双栈队列<a class="anchor" href="#双栈队列" aria-label="定位到 双栈队列">#</a></h4>
+<p><strong>解决什么</strong>：只用后进先出的栈实现先进先出队列，并让一系列入队、出队操作保持常数均摊成本。</p>
+<p><strong>核心原理</strong>：新元素压入输入栈；只有输出栈为空时才把输入栈全部倒入。每个元素至多进入、移出两个栈各一次，因此偶尔的线性搬运可摊到整个操作序列。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>class AmortizedQueue:
+  def __init__(self):
+    self.in_stack = []
+    self.out_stack = []
+
+  def push(self, value):
+    self.in_stack.append(value)
+
+  def pop(self):
+    if not self.out_stack:
+      while self.in_stack:
+        self.out_stack.append(self.in_stack.pop())
+    return self.out_stack.pop()</code></pre></div>
+<p><strong>复杂度</strong>：<code>push</code> 为 $O(1)$；<code>pop</code> 单次最坏 $O(n)$、均摊 $O(1)$；空间 $O(n)$。</p>
+<p><strong>易错点</strong>：输出栈非空时不能重复搬运；空队列行为要遵循接口契约；摊还 $O(1)$ 不等于每次最坏 $O(1)$。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/implement-queue-using-stacks/" target="_blank" rel="noreferrer">232. Implement Queue using Stacks</a>；<a href="https://leetcode.com/problems/implement-stack-using-queues/" target="_blank" rel="noreferrer">225. Implement Stack using Queues</a> 是反向模拟，复杂度取舍不同。</p>
+</section>
+<h3 id="随机访问与删除">随机访问与删除</h3>
+<section class="algorithm" data-search="动态数组加哈希索引"><h4 id="动态数组加哈希索引">动态数组加哈希索引<a class="anchor" href="#动态数组加哈希索引" aria-label="定位到 动态数组加哈希索引">#</a></h4>
+<p><strong>解决什么</strong>：平均 $O(1)$ 插入、删除和等概率随机取元素；允许重复值时仍按元素出现次数采样。</p>
+<p><strong>核心原理</strong>：动态数组负责 $O(1)$ 随机访问，哈希表把值映射到其下标集合。删除中间元素时与数组末尾交换再弹出，并同步修正两个值的索引集合。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>import random
+from collections import defaultdict
+
+class RandomizedCollection:
+  def __init__(self):
+    self.values = []
+    self.indices = defaultdict(set)
+
+  def insert(self, value):
+    self.indices[value].add(len(self.values))
+    self.values.append(value)
+
+  def remove(self, value):
+    if not self.indices[value]:
+      return False
+    remove_index = self.indices[value].pop()
+    last_value = self.values[-1]
+    if remove_index != len(self.values) - 1:
+      self.values[remove_index] = last_value
+      self.indices[last_value].remove(len(self.values) - 1)
+      self.indices[last_value].add(remove_index)
+    self.values.pop()
+    return True
+
+  def get_random(self):
+    return random.choice(self.values)</code></pre></div>
+<p><strong>复杂度</strong>：插入、删除、随机读取期望 $O(1)$，空间 $O(n)$。</p>
+<p><strong>易错点</strong>：删除值恰好等于末尾值时也要正确更新索引；交换数组后必须同步反向索引；空集合随机读取的行为应明确。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/insert-delete-getrandom-o1-duplicates-allowed/" target="_blank" rel="noreferrer">381. Insert Delete GetRandom O(1) - Duplicates allowed</a>，本地源码用列表保存索引并调用 <code>remove</code>，最坏为 $O(n)$，不是上述集合版的期望 $O(1)$ 实证。</p>
+</section>
+<h3 id="多容器协作">多容器协作</h3>
+<section class="algorithm" data-search="堆加多栈与延迟清理"><h4 id="堆加多栈与延迟清理">堆加多栈与延迟清理<a class="anchor" href="#堆加多栈与延迟清理" aria-label="定位到 堆加多栈与延迟清理">#</a></h4>
+<p><strong>解决什么</strong>：在多个有容量限制的栈中，总是向最左未满栈写入、从最右非空栈弹出，并支持指定栈操作。</p>
+<p><strong>核心原理</strong>：数组保存各个栈，最小堆保存可能未满的栈下标。堆中允许暂时存在过期下标，使用前持续弹出已越界或已满项；尾部空栈则立即裁剪。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>import heapq
+
+class PlateStacks:
+  def __init__(self, capacity):
+    self.capacity = capacity
+    self.stacks = []
+    self.available = []
+
+  def push(self, value):
+    while self.available and (self.available[0] &gt;= len(self.stacks) or len(self.stacks[self.available[0]]) == self.capacity):
+      heapq.heappop(self.available)
+    if not self.available:
+      heapq.heappush(self.available, len(self.stacks))
+      self.stacks.append([])
+    self.stacks[self.available[0]].append(value)
+
+  def pop_at(self, index):
+    if index &gt;= len(self.stacks) or not self.stacks[index]:
+      return -1
+    heapq.heappush(self.available, index)
+    return self.stacks[index].pop()</code></pre></div>
+<p><strong>复杂度</strong>：每个有效或过期堆项至多进出一次，操作均摊 $O(\log n)$；全部栈与堆空间 $O(n)$。</p>
+<p><strong>易错点</strong>：标准完整实现还需在普通 <code>pop</code> 后裁剪右侧空栈；堆中重复下标要靠校验或额外集合控制；延迟删除的复杂度应按一系列操作分析。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/dinner-plate-stacks/" target="_blank" rel="noreferrer">1172. Dinner Plate Stacks</a>，本地源码使用有序列表和 <code>pop(0)</code>，单次更新最坏 $O(n)$，并非堆版实证。</p>
+</section>
+<h3 id="时间版本索引">时间版本索引</h3>
+<section class="algorithm" data-search="哈希表加有序时间轴二分"><h4 id="哈希表加有序时间轴二分">哈希表加有序时间轴二分<a class="anchor" href="#哈希表加有序时间轴二分" aria-label="定位到 哈希表加有序时间轴二分">#</a></h4>
+<p><strong>解决什么</strong>：按键写入多个时间版本，并查询不晚于指定时间的最新值；也适合单调追加的历史统计。</p>
+<p><strong>核心原理</strong>：哈希表隔离不同键，每个键对应按时间递增的 <code>(timestamp, value)</code> 数组。查询使用右边界二分定位最后一个 <code>timestamp &lt;= target</code> 的版本。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from bisect import bisect_right
+
+class TimeMap:
+  def __init__(self):
+    self.history = {}
+
+  def set(self, key, value, timestamp):
+    self.history.setdefault(key, []).append((timestamp, value))
+
+  def get(self, key, timestamp):
+    versions = self.history.get(key, [])
+    index = bisect_right(versions, (timestamp, chr(0x10FFFF))) - 1
+    return &quot;&quot; if index &lt; 0 else versions[index][1]</code></pre></div>
+<p><strong>复杂度</strong>：时间戳单调写入时 <code>set</code> 为 $O(1)$，<code>get</code> 为 $O(\log n)$，总空间 $O(n)$。</p>
+<p><strong>易错点</strong>：模板依赖同一键的时间戳递增；二分必须找不大于目标的最后一个版本；元组哨兵需覆盖值的比较范围，工程代码也可单独二分时间戳数组。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/time-based-key-value-store/" target="_blank" rel="noreferrer">981. Time Based Key-Value Store</a>、<a href="https://leetcode.com/problems/design-exam-scores-tracker/" target="_blank" rel="noreferrer">3709. Design Exam Scores Tracker</a></p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/min-stack/" target="_blank" rel="noreferrer">155. Min Stack</a>：同步维护栈内最小值。</li><li>C++ 历史实现：<a href="https://leetcode.com/problems/range-sum-query-mutable/" target="_blank" rel="noreferrer">307. Range Sum Query - Mutable</a>：树状数组维护动态区间和。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/design-circular-queue/" target="_blank" rel="noreferrer">622. Design Circular Queue</a>：固定容量循环队列。</li><li>Python 本地实现：<a href="https://leetcode.com/problems/design-event-manager/" target="_blank" rel="noreferrer">3885. Design Event Manager</a>：字典维护优先级，<code>bisect + list</code> 更新最坏 $O(n)$。</li></ul>
+</section></section>
+    <nav class="pager" aria-label="分册导航"><a href="03-recursion-and-state.html"><small>上一册</small><strong>递归与状态搜索</strong></a><a class="next" href="05-specialized-tools.html"><small>下一册</small><strong>专项工具</strong></a></nav>
+  </main>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script defer src="assets/app.js"></script>
+</body>
+</html>

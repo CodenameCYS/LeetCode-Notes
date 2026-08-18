@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="围绕连续区间、有序边界和动态候选集合，组织高频的线性扫描工具。">
+  <title>线性与区间技巧 · LeetCode Guidebook</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body class="reader-page" data-accent="gold">
+  <a class="skip-link" href="#main-content">跳到正文</a>
+  <aside class="sidebar">
+    <a class="brand" href="main.html"><span class="brand-mark">LC</span><span>Algorithm<br>Guidebook</span></a>
+    <div class="side-label">本册目录</div><nav><details class="side-chapter"><summary><span>双指针</span><small>4</small></summary><div class="side-branch"><a class="side-overview" href="#双指针">章节概览</a><details class="side-module"><summary><span>有序数组上的相向指针</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#排序后左右夹逼">排序后左右夹逼</a><a class="side-algorithm" href="#从两端逆序构造答案">从两端逆序构造答案</a></div></details><details class="side-module"><summary><span>子序列匹配</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#左右极限匹配">左右极限匹配</a></div></details><details class="side-module"><summary><span>原地覆盖</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#读写指针压缩数组">读写指针压缩数组</a></div></details></div></details><details class="side-chapter"><summary><span>滑动窗口</span><small>4</small></summary><div class="side-branch"><a class="side-overview" href="#滑动窗口">章节概览</a><details class="side-module"><summary><span>固定长度窗口</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#入一个出一个的滚动维护">入一个、出一个的滚动维护</a></div></details><details class="side-module"><summary><span>单调约束窗口</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#最长合法窗口">最长合法窗口</a><a class="side-algorithm" href="#最短可行窗口">最短可行窗口</a></div></details><details class="side-module"><summary><span>子数组计数</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#两个边界计数恰好满足">两个边界计数恰好满足</a></div></details></div></details><details class="side-chapter"><summary><span>前缀和与差分</span><small>4</small></summary><div class="side-branch"><a class="side-overview" href="#前缀和与差分">章节概览</a><details class="side-module"><summary><span>静态区间聚合</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#一维前缀和">一维前缀和</a></div></details><details class="side-module"><summary><span>前缀状态计数</span><small>2</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#前缀和加哈希表">前缀和加哈希表</a><a class="side-algorithm" href="#前缀不等式与有序计数">前缀不等式与有序计数</a></div></details><details class="side-module"><summary><span>离线区间修改</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#一维与二维差分">一维与二维差分</a></div></details></div></details><details class="side-chapter"><summary><span>二分查找</span><small>3</small></summary><div class="side-branch"><a class="side-overview" href="#二分查找">章节概览</a><details class="side-module"><summary><span>有序序列边界</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#左边界与右边界二分">左边界与右边界二分</a></div></details><details class="side-module"><summary><span>单调可行性</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#二分最小可行答案">二分最小可行答案</a></div></details><details class="side-module"><summary><span>局部有序数组</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#旋转数组二分">旋转数组二分</a></div></details></div></details><details class="side-chapter"><summary><span>栈、队列与单调结构</span><small>3</small></summary><div class="side-branch"><a class="side-overview" href="#栈队列与单调结构">章节概览</a><details class="side-module"><summary><span>后进先出状态</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#栈模拟与嵌套解析">栈模拟与嵌套解析</a></div></details><details class="side-module"><summary><span>最近边界与贡献</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#单调栈">单调栈</a></div></details><details class="side-module"><summary><span>滑动窗口极值</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#单调队列">单调队列</a></div></details></div></details><details class="side-chapter"><summary><span>堆与优先队列</span><small>3</small></summary><div class="side-branch"><a class="side-overview" href="#堆与优先队列">章节概览</a><details class="side-module"><summary><span>有界候选集合</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#top-k-小顶堆">Top K 小顶堆</a></div></details><details class="side-module"><summary><span>有序候选扩展</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#多路归并">多路归并</a></div></details><details class="side-module"><summary><span>资源调度</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#双堆事件调度">双堆事件调度</a></div></details></div></details><details class="side-chapter"><summary><span>区间问题</span><small>4</small></summary><div class="side-branch"><a class="side-overview" href="#区间问题">章节概览</a><details class="side-module"><summary><span>区间归并</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#按左端点排序合并">按左端点排序合并</a></div></details><details class="side-module"><summary><span>无权区间调度</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#最早结束时间贪心">最早结束时间贪心</a></div></details><details class="side-module"><summary><span>重叠计数</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#事件扫描线">事件扫描线</a></div></details><details class="side-module"><summary><span>加权区间选择</span><small>1</small></summary><div class="side-algorithms"><a class="side-algorithm" href="#二分前驱加动态规划">二分前驱加动态规划</a></div></details></div></details></nav>
+    <a class="back-map" href="main.html">返回完整思维导图</a>
+  </aside>
+  <main id="main-content" class="reader">
+    <header class="reader-head">
+      <div class="reader-actions"><a href="main.html">思维导图</a><label class="search"><span>搜索本册</span><input type="search" data-search-input placeholder="输入算法或知识点"></label></div>
+      <div class="edition">VOLUME 02</div><h1>线性与区间技巧</h1><p>围绕连续区间、有序边界和动态候选集合，组织高频的线性扫描工具。</p>
+      <div class="reader-stats"><span>7 个题型</span><span>25 个典型算法</span></div>
+    </header>
+    <div class="no-results" data-no-results hidden>没有匹配的算法，请尝试更短的关键词。</div>
+    <section class="chapter" id="双指针" data-search="双指针"><div class="chapter-index">01</div><h2>双指针</h2><p>双指针不是“两个循环变量”的同义词，而是利用单调性或覆盖不变量，让每个指针只沿一个方向移动，从而批量排除候选。</p>
+<h3 id="有序数组上的相向指针">有序数组上的相向指针</h3>
+<section class="algorithm" data-search="排序后左右夹逼"><h4 id="排序后左右夹逼">排序后左右夹逼<a class="anchor" href="#排序后左右夹逼" aria-label="定位到 排序后左右夹逼">#</a></h4>
+<p><strong>解决什么</strong>：有序数组中的两数和、三数和、最接近目标值，以及满足单调关系的数对搜索。</p>
+<p><strong>核心原理</strong>：固定一个元素后，左右端点之和偏小时只能移动左指针增大结果，偏大时只能移动右指针减小结果；一次移动可以排除一整批不可能候选。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def three_sum(nums, target=0):
+  nums.sort()
+  answer = []
+  for first in range(len(nums) - 2):
+    if first &gt; 0 and nums[first] == nums[first - 1]:
+      continue
+    left, right = first + 1, len(nums) - 1
+    while left &lt; right:
+      total = nums[first] + nums[left] + nums[right]
+      if total &lt; target:
+        left += 1
+      elif total &gt; target:
+        right -= 1
+      else:
+        answer.append([nums[first], nums[left], nums[right]])
+        left += 1
+        right -= 1
+        while left &lt; right and nums[left] == nums[left - 1]:
+          left += 1
+        while left &lt; right and nums[right] == nums[right + 1]:
+          right -= 1
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：排序 $O(n\log n)$，三数枚举总时间 $O(n^2)$；除结果和排序开销外辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：去重必须分别处理固定元素、左端和右端；找到答案后两个指针都要移动；只有排序建立了单调性后才能按和的大小移动指针。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/3sum/" target="_blank" rel="noreferrer">15. 3Sum</a></li><li>C++ 历史实现：<a href="https://leetcode.com/problems/3sum/" target="_blank" rel="noreferrer">15. 3Sum</a></li><li>C++ 历史实现：<a href="https://leetcode.com/problems/3sum-closest/" target="_blank" rel="noreferrer">16. 3Sum Closest</a></li><li>C++ 历史实现：<a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" target="_blank" rel="noreferrer">167. Two Sum II</a></li></ul>
+</section>
+<section class="algorithm" data-search="从两端逆序构造答案"><h4 id="从两端逆序构造答案">从两端逆序构造答案<a class="anchor" href="#从两端逆序构造答案" aria-label="定位到 从两端逆序构造答案">#</a></h4>
+<p><strong>解决什么</strong>：输入有序，但变换后最大值可能来自任一端，例如平方、绝对值或按距离重排。</p>
+<p><strong>核心原理</strong>：比较两端变换值，把较大者写入答案末尾，再向内移动对应指针。答案写指针从后向前推进，始终保持未写区域与未处理输入对应。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def sorted_squares(nums):
+  answer = [0] * len(nums)
+  left, right = 0, len(nums) - 1
+  for write in range(len(nums) - 1, -1, -1):
+    if abs(nums[left]) &gt; abs(nums[right]):
+      answer[write] = nums[left] ** 2
+      left += 1
+    else:
+      answer[write] = nums[right] ** 2
+      right -= 1
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$；返回数组空间 $O(n)$，辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：比较的是变换后的大小而非原值；写入方向应与每次选择最大值或最小值一致；空数组时右指针为 <code>-1</code>，循环应自然跳过。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/squares-of-a-sorted-array/" target="_blank" rel="noreferrer">977. Squares of a Sorted Array</a></p>
+</section>
+<h3 id="子序列匹配">子序列匹配</h3>
+<section class="algorithm" data-search="左右极限匹配"><h4 id="左右极限匹配">左右极限匹配<a class="anchor" href="#左右极限匹配" aria-label="定位到 左右极限匹配">#</a></h4>
+<p><strong>解决什么</strong>：模式串必须按顺序匹配到文本串的一个子序列中，并要最大化某对相邻匹配位置的距离，或判断每个模式位置可达到的最左、最右边界。</p>
+<p><strong>核心原理</strong>：从左向右贪心求每个模式字符的最早匹配位置 <code>left[i]</code>，从右向左求最晚匹配位置 <code>right[i]</code>。固定相邻断点 $i$ 后，前缀采用最早位置、后缀采用最晚位置会为该断点留下最大距离，因此答案是 $\max(right[i+1]-left[i])$。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def maximum_subsequence_gap(pattern, text):
+  size = len(pattern)
+  left = [0] * size
+  cursor = 0
+  for index, char in enumerate(pattern):
+    while text[cursor] != char:
+      cursor += 1
+    left[index] = cursor
+    cursor += 1
+
+  right = [0] * size
+  cursor = len(text) - 1
+  for index in range(size - 1, -1, -1):
+    while text[cursor] != pattern[index]:
+      cursor -= 1
+    right[index] = cursor
+    cursor -= 1
+  return max((right[i + 1] - left[i] for i in range(size - 1)), default=0)</code></pre></div>
+<p><strong>复杂度</strong>：两次扫描均为单向推进，时间 $O(n+m)$，空间 $O(n)$，其中 $n$ 为模式长度、$m$ 为文本长度。</p>
+<p><strong>易错点</strong>：该结论依赖题目保证模式是文本的子序列；最大间隔跨越的是 <code>left[i]</code> 与 <code>right[i+1]</code>，不是同一字符的左右位置；模式长度为 1 时答案按定义为 0。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/maximum-gap-between-stations/" target="_blank" rel="noreferrer">4026. Maximum Gap Between Stations</a></p>
+</section>
+<h3 id="原地覆盖">原地覆盖</h3>
+<section class="algorithm" data-search="读写指针压缩数组"><h4 id="读写指针压缩数组">读写指针压缩数组<a class="anchor" href="#读写指针压缩数组" aria-label="定位到 读写指针压缩数组">#</a></h4>
+<p><strong>解决什么</strong>：原地删除、去重、保留至多若干次重复值，或把满足条件的元素压缩到数组前部。</p>
+<p><strong>核心原理</strong>：读指针扫描原数组，写指针表示有效前缀长度。允许每个值最多出现 <code>limit</code> 次时，只需把当前值与 <code>nums[write - limit]</code> 比较。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def keep_at_most(nums, limit):
+  write = 0
+  for value in nums:
+    if write &lt; limit or value != nums[write - limit]:
+      nums[write] = value
+      write += 1
+  return write</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：模板依赖相同值连续出现，通常要求数组已有序；返回的是有效前缀长度，后面的旧内容无需清理；<code>limit=0</code> 应按题意单独处理。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/" target="_blank" rel="noreferrer">80. Remove Duplicates from Sorted Array II</a></p>
+<p><strong>补充练习</strong>：</p>
+<ul><li><a href="https://leetcode.com/problems/linked-list-cycle-ii/" target="_blank" rel="noreferrer">142. Linked List Cycle II</a>：本地 Python 实现使用哈希集合记录访问节点，时间与空间均为 $O(n)$，并非 Floyd 快慢指针。</li></ul>
+</section></section><section class="chapter" id="滑动窗口" data-search="滑动窗口"><div class="chapter-index">02</div><h2>滑动窗口</h2><p>滑动窗口适用于“右端加入后，左端只需单向移动”的连续区间问题。写模板前先判断窗口合法性是否单调；负数常会破坏和或乘积约束的单调性。</p>
+<h3 id="固定长度窗口">固定长度窗口</h3>
+<section class="algorithm" data-search="入一个、出一个的滚动维护"><h4 id="入一个出一个的滚动维护">入一个、出一个的滚动维护<a class="anchor" href="#入一个出一个的滚动维护" aria-label="定位到 入一个、出一个的滚动维护">#</a></h4>
+<p><strong>解决什么</strong>：定长子串异位词、窗口频次、定长区间统计，以及只需维护增量变化的连续区间问题。</p>
+<p><strong>核心原理</strong>：右端元素进入状态；窗口长度超过 $k$ 时，恰好移出 <code>right - k</code> 位置的元素。每次只更新两个元素，而不是重算整个窗口。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import Counter
+
+def fixed_window_frequencies(nums, k):
+  frequency = Counter()
+  snapshots = []
+  for right, value in enumerate(nums):
+    frequency[value] += 1
+    if right &gt;= k:
+      outgoing = nums[right - k]
+      frequency[outgoing] -= 1
+      if frequency[outgoing] == 0:
+        del frequency[outgoing]
+    if right &gt;= k - 1:
+      snapshots.append(frequency.copy())
+  return snapshots</code></pre></div>
+<p><strong>复杂度</strong>：若状态更新为均摊 $O(1)$，扫描时间 $O(n)$，窗口状态空间 $O(k)$；示例复制快照还需计入输出成本。</p>
+<p><strong>易错点</strong>：先加入还是先移出必须与窗口长度判断一致；频次降为零时通常应删除键；<code>k&lt;=0</code> 需要按题意拒绝或特判。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/permutation-in-string/" target="_blank" rel="noreferrer">567. Permutation in String</a></li><li>Python 实证：<a href="https://leetcode.com/problems/minimum-inversion-count-in-subarrays-of-fixed-length/" target="_blank" rel="noreferrer">3768. Minimum Inversion Count in Subarrays of Fixed Length</a>：本地实现用 <code>bisect + list</code> 维护有序窗口，查找 $O(\log k)$，插入删除为 $O(k)$，总时间最坏 $O(nk)$。</li></ul>
+</section>
+<h3 id="单调约束窗口">单调约束窗口</h3>
+<section class="algorithm" data-search="最长合法窗口"><h4 id="最长合法窗口">最长合法窗口<a class="anchor" href="#最长合法窗口" aria-label="定位到 最长合法窗口">#</a></h4>
+<p><strong>解决什么</strong>：求满足“至多 $k$ 次修改”“至多 $k$ 个不同值”等单调约束的最长连续区间。</p>
+<p><strong>核心原理</strong>：右端持续扩张；一旦窗口不合法，就移动左端直到恢复合法，再更新最大长度。以字符替换为例，窗口长度减去窗口内最高频字符数就是最少替换次数。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import defaultdict
+
+def longest_repeating_after_replacements(text, k):
+  frequency = defaultdict(int)
+  left = max_frequency = answer = 0
+  for right, char in enumerate(text):
+    frequency[char] += 1
+    max_frequency = max(max_frequency, frequency[char])
+    while right - left + 1 - max_frequency &gt; k:
+      frequency[text[left]] -= 1
+      left += 1
+    answer = max(answer, right - left + 1)
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，空间 $O(|\Sigma|)$，其中 $\Sigma$ 为字符集。</p>
+<p><strong>易错点</strong>：<code>max_frequency</code> 可以保留历史最大值，因为它只用于判断是否存在同长度的潜在合法窗口；若改写为必须精确维护当前窗口的题目，收缩后需重新计算或使用其他结构。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/longest-repeating-character-replacement/" target="_blank" rel="noreferrer">424. Longest Repeating Character Replacement</a>；本地实现按目标字符的位置列表分别滑窗，是同一约束的另一种 $O(n)$ 建模。</p>
+</section>
+<section class="algorithm" data-search="最短可行窗口"><h4 id="最短可行窗口">最短可行窗口<a class="anchor" href="#最短可行窗口" aria-label="定位到 最短可行窗口">#</a></h4>
+<p><strong>解决什么</strong>：在正数数组中寻找和至少为目标值的最短子数组，或求首次满足单调阈值的最小窗口。</p>
+<p><strong>核心原理</strong>：右端加入元素后，只要当前窗口已可行，就记录答案并持续移出左端，直到刚好不可行；这样枚举了每个右端对应的最短可行左边界。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def min_subarray_length(target, nums):
+  left = window_sum = 0
+  answer = len(nums) + 1
+  for right, value in enumerate(nums):
+    window_sum += value
+    while window_sum &gt;= target:
+      answer = min(answer, right - left + 1)
+      window_sum -= nums[left]
+      left += 1
+  return 0 if answer == len(nums) + 1 else answer</code></pre></div>
+<p><strong>复杂度</strong>：左右指针各移动至多 $n$ 次，时间 $O(n)$，辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：和随窗口扩张单调依赖元素为正或非负；含负数时该模板会漏解；答案要在移出左端之前更新。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/minimum-size-subarray-sum/" target="_blank" rel="noreferrer">209. Minimum Size Subarray Sum</a></p>
+</section>
+<h3 id="子数组计数">子数组计数</h3>
+<section class="algorithm" data-search="两个边界计数恰好满足"><h4 id="两个边界计数恰好满足">两个边界计数恰好满足<a class="anchor" href="#两个边界计数恰好满足" aria-label="定位到 两个边界计数恰好满足">#</a></h4>
+<p><strong>解决什么</strong>：统计恰好 $k$ 个不同值、恰好满足某个频次层级，或直接条件不易单调维护的子数组数量。</p>
+<p><strong>核心原理</strong>：把“恰好”改写成两个具有单调性的累计计数之差，例如 <code>at_most(k) - at_most(k - 1)</code>。每个右端对应的合法左端个数可直接累加。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import defaultdict
+
+def subarrays_with_k_distinct(nums, k):
+  def at_most(limit):
+    if limit &lt; 0:
+      return 0
+    frequency = defaultdict(int)
+    left = answer = 0
+    for right, value in enumerate(nums):
+      frequency[value] += 1
+      while len(frequency) &gt; limit:
+        outgoing = nums[left]
+        frequency[outgoing] -= 1
+        if frequency[outgoing] == 0:
+          del frequency[outgoing]
+        left += 1
+      answer += right - left + 1
+    return answer
+
+  return at_most(k) - at_most(k - 1)</code></pre></div>
+<p><strong>复杂度</strong>：两次滑窗均为 $O(n)$，总时间 $O(n)$；频次表空间 $O(u)$，其中 $u$ 为窗口内不同元素数上界。</p>
+<p><strong>易错点</strong>：不是所有“恰好”条件都能直接套 <code>at_most</code>；要先证明累计条件单调。累加的是以当前右端结尾的合法左端数量，不是只加一。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/count-subarrays-with-k-distinct-integers/" target="_blank" rel="noreferrer">3859. Count Subarrays With K Distinct Integers</a>；本地题还要求每个不同值至少出现 $m$ 次，使用两个收缩阈值之差完成计数。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/subarray-product-less-than-k/" target="_blank" rel="noreferrer">713. Subarray Product Less Than K</a>：正数乘积约束与以右端结尾的子数组计数。</li><li>C++ 历史实现：<a href="https://leetcode.com/problems/max-consecutive-ones-iii/" target="_blank" rel="noreferrer">1004. Max Consecutive Ones III</a>：至多翻转 $k$ 个零的最长窗口。</li><li><a href="https://leetcode.com/problems/maximum-number-of-robots-within-budget/" target="_blank" rel="noreferrer">2398. Maximum Number of Robots Within Budget</a>：Python 本地实现以有序列表维护窗口最大值，中间插入删除最坏 $O(n)$；标准线性解法应使用单调队列。</li></ul>
+</section></section><section class="chapter" id="前缀和与差分" data-search="前缀和与差分"><div class="chapter-index">03</div><h2>前缀和与差分</h2><p>前缀和把区间信息改写成两个端点状态之差；差分则是它的逆过程，把多次区间修改压缩成端点事件。静态查询优先前缀和，在线修改应转向树状数组或线段树。</p>
+<h3 id="静态区间聚合">静态区间聚合</h3>
+<section class="algorithm" data-search="一维前缀和"><h4 id="一维前缀和">一维前缀和<a class="anchor" href="#一维前缀和" aria-label="定位到 一维前缀和">#</a></h4>
+<p><strong>解决什么</strong>：数组不再修改时，多次查询区间和、区间计数或可加信息。</p>
+<p><strong>核心原理</strong>：令 <code>prefix[i]</code> 表示前 <code>i</code> 个元素之和，并设置 <code>prefix[0] = 0</code>。闭区间 $[left,right]$ 的和统一为 <code>prefix[right + 1] - prefix[left]</code>。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>class PrefixSum:
+  def __init__(self, nums):
+    self.prefix = [0]
+    for value in nums:
+      self.prefix.append(self.prefix[-1] + value)
+
+  def range_sum(self, left, right):
+    return self.prefix[right + 1] - self.prefix[left]</code></pre></div>
+<p><strong>复杂度</strong>：预处理时间和空间均为 $O(n)$；单次查询 $O(1)$。</p>
+<p><strong>易错点</strong>：统一前缀含义和区间开闭，不要混用 <code>prefix[right]</code> 与 <code>prefix[right + 1]</code>；累计值可能超出 32 位整数；存在在线修改时不能每次重建。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/range-sum-query-immutable/" target="_blank" rel="noreferrer">303. Range Sum Query - Immutable</a></p>
+</section>
+<h3 id="前缀状态计数">前缀状态计数</h3>
+<section class="algorithm" data-search="前缀和加哈希表"><h4 id="前缀和加哈希表">前缀和加哈希表<a class="anchor" href="#前缀和加哈希表" aria-label="定位到 前缀和加哈希表">#</a></h4>
+<p><strong>解决什么</strong>：统计和等于目标值的子数组，或寻找两个相同前缀状态之间的最长区间。</p>
+<p><strong>核心原理</strong>：若当前前缀和为 <code>current</code>，此前前缀和为 <code>current - target</code>，两者之间的子数组和就是 <code>target</code>。计数题保存此前状态出现次数；最长区间题保存状态第一次出现位置。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import defaultdict
+
+def count_subarray_sum(nums, target):
+  seen = defaultdict(int)
+  seen[0] = 1
+  current = answer = 0
+  for value in nums:
+    current += value
+    answer += seen[current - target]
+    seen[current] += 1
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：期望时间 $O(n)$，空间 $O(n)$。</p>
+<p><strong>易错点</strong>：必须先放入空前缀 <code>0</code>；先查询再记录当前前缀，避免把空子数组算入；求最长长度时不能覆盖状态的最早位置。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/contiguous-array/" target="_blank" rel="noreferrer">525. Contiguous Array</a>：把 <code>0/1</code> 映射为 <code>+1/-1</code>，本地实现保存同一前缀状态的全部位置后取首尾距离。</li><li>C++ 历史实现：<a href="https://leetcode.com/problems/subarray-sum-equals-k/" target="_blank" rel="noreferrer">560. Subarray Sum Equals K</a></li></ul>
+</section>
+<section class="algorithm" data-search="前缀不等式与有序计数"><h4 id="前缀不等式与有序计数">前缀不等式与有序计数<a class="anchor" href="#前缀不等式与有序计数" aria-label="定位到 前缀不等式与有序计数">#</a></h4>
+<p><strong>解决什么</strong>：统计子数组状态大于、低于某个阈值，或把比例与多数条件转换成前缀值之间的大小关系。</p>
+<p><strong>核心原理</strong>：先给每个元素赋权，把区间条件化为 <code>prefix[right] &gt; prefix[left]</code> 或类似不等式；扫描右端时，在有序结构中查询此前前缀值的排名，再插入当前值。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from bisect import bisect_left, insort
+
+def count_positive_sum_subarrays(weights):
+  ordered = [0]
+  prefix = answer = 0
+  for weight in weights:
+    prefix += weight
+    answer += bisect_left(ordered, prefix)
+    insort(ordered, prefix)
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：该简洁 Python 模板使用列表，查询 $O(\log n)$，插入 $O(n)$，总时间最坏 $O(n^2)$、空间 $O(n)$；坐标压缩加树状数组可优化到 $O(n\log n)$。</p>
+<p><strong>易错点</strong>：严格不等式用 <code>bisect_left</code>，非严格不等式通常用 <code>bisect_right</code>；比例比较应交叉相乘，避免浮点误差；额外条件如“分母大于零”必须单独验证是否已被变换包含。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/count-subarrays-with-majority-element-ii/" target="_blank" rel="noreferrer">3739. Count Subarrays With Majority Element II</a>：目标值映射为 <code>+1</code>、其余映射为 <code>-1</code>，本地实现使用 <code>bisect + list</code>。</li><li>Python 实证：<a href="https://leetcode.com/problems/count-subarrays-with-even-odd-ratio-ii/" target="_blank" rel="noreferrer">4013. Count Subarrays With Even Odd Ratio II</a>：比例不等式赋权后统计有序前缀，本地实现同样存在 $O(n)$ 插入。</li></ul>
+</section>
+<h3 id="离线区间修改">离线区间修改</h3>
+<section class="algorithm" data-search="一维与二维差分"><h4 id="一维与二维差分">一维与二维差分<a class="anchor" href="#一维与二维差分" aria-label="定位到 一维与二维差分">#</a></h4>
+<p><strong>解决什么</strong>：执行大量区间加或矩形加，最后一次性得到所有位置的值。</p>
+<p><strong>核心原理</strong>：一维闭区间 $[left,right]$ 加 <code>delta</code>，只记录 <code>diff[left] += delta</code> 与 <code>diff[right + 1] -= delta</code>。二维矩形使用四角标记，最后对两个维度做前缀累加还原。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def apply_range_additions(length, updates):
+  difference = [0] * (length + 1)
+  for left, right, delta in updates:
+    difference[left] += delta
+    difference[right + 1] -= delta
+
+  values = [0] * length
+  running = 0
+  for index in range(length):
+    running += difference[index]
+    values[index] = running
+  return values</code></pre></div>
+<p><strong>复杂度</strong>：一维中，$q$ 次修改与还原总时间 $O(q+n)$、空间 $O(n)$；二维 $r\times c$ 网格为 $O(q+rc)$ 时间和 $O(rc)$ 空间。</p>
+<p><strong>易错点</strong>：数组要为 <code>right + 1</code> 预留哨兵位置；闭区间与半开区间的撤销端点不同；二维四角符号必须成对，恢复时不要漏掉容斥项。</p>
+<p><strong>对应例题</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/car-pooling/" target="_blank" rel="noreferrer">1094. Car Pooling</a></li><li>Python 实证：<a href="https://leetcode.com/problems/increment-submatrices-by-one/" target="_blank" rel="noreferrer">2536. Increment Submatrices by One</a>：四角标记加二维前缀还原。</li></ul>
+<p><strong>补充练习</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/range-sum-query-2d-immutable/" target="_blank" rel="noreferrer">304. Range Sum Query 2D - Immutable</a>：二维前缀和与矩形容斥。</li></ul>
+</section></section><section class="chapter" id="二分查找" data-search="二分查找"><div class="chapter-index">04</div><h2>二分查找</h2><p>二分的本质是利用单调性排除一半候选。先写清搜索区间、循环不变量和最终返回值，再选择精确查找、边界查找或二分答案模板。</p>
+<h3 id="有序序列边界">有序序列边界</h3>
+<section class="algorithm" data-search="左边界与右边界二分"><h4 id="左边界与右边界二分">左边界与右边界二分<a class="anchor" href="#左边界与右边界二分" aria-label="定位到 左边界与右边界二分">#</a></h4>
+<p><strong>解决什么</strong>：查找目标值、第一处不小于目标的位置，或第一处大于目标的位置。</p>
+<p><strong>核心原理</strong>：在左闭右开区间 <code>[left, right)</code> 中维护答案候选；条件成立时保留中点并收缩右边界，否则排除中点。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def lower_bound(nums, target):
+  left, right = 0, len(nums)
+  while left &lt; right:
+    middle = (left + right) // 2
+    if nums[middle] &gt;= target:
+      right = middle
+    else:
+      left = middle + 1
+  return left</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(\log n)$，空间 $O(1)$。</p>
+<p><strong>易错点</strong>：整个循环必须统一闭区间或半开区间语义；<code>lower_bound</code> 使用 <code>&gt;=</code>，<code>upper_bound</code> 使用 <code>&gt;</code>；返回值可能等于 <code>len(nums)</code>。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/binary-search/" target="_blank" rel="noreferrer">704. Binary Search</a>、<a href="https://leetcode.com/problems/first-bad-version/" target="_blank" rel="noreferrer">278. First Bad Version</a></p>
+</section>
+<h3 id="单调可行性">单调可行性</h3>
+<section class="algorithm" data-search="二分最小可行答案"><h4 id="二分最小可行答案">二分最小可行答案<a class="anchor" href="#二分最小可行答案" aria-label="定位到 二分最小可行答案">#</a></h4>
+<p><strong>解决什么</strong>：答案是整数，且 <code>feasible(value)</code> 从某个位置开始恒为真，例如最小容量、最短天数或最小阈值。</p>
+<p><strong>核心原理</strong>：先给出覆盖全部答案的闭区间；可行时保留中点并向左找更小答案，不可行时排除中点。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def first_feasible(low, high, feasible):
+  while low &lt; high:
+    middle = low + (high - low) // 2
+    if feasible(middle):
+      high = middle
+    else:
+      low = middle + 1
+  return low</code></pre></div>
+<p><strong>复杂度</strong>：若判定一次为 $O(f(n))$，值域大小为 $V$，总时间 $O(f(n)\log V)$，额外空间由判定函数决定。</p>
+<p><strong>易错点</strong>：先证明判定函数单调；上下界必须覆盖答案且 <code>high</code> 可行；求最大可行值时要改不变量并防止中点停滞。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/" target="_blank" rel="noreferrer">1482. Minimum Number of Days to Make m Bouquets</a>，本地文件名题号误写为 1480；<a href="https://leetcode.com/problems/minimum-threshold-path-with-limited-heavy-edges/" target="_blank" rel="noreferrer">3924. Minimum Threshold Path With Limited Heavy Edges</a></p>
+</section>
+<h3 id="局部有序数组">局部有序数组</h3>
+<section class="algorithm" data-search="旋转数组二分"><h4 id="旋转数组二分">旋转数组二分<a class="anchor" href="#旋转数组二分" aria-label="定位到 旋转数组二分">#</a></h4>
+<p><strong>解决什么</strong>：在原本有序、经过一次旋转的数组中寻找最小值或目标值。</p>
+<p><strong>核心原理</strong>：将中点与右端比较。若 <code>nums[middle] &gt; nums[right]</code>，最小值严格在右侧；否则最小值位于包含中点的左半区间。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def find_rotated_minimum(nums):
+  left, right = 0, len(nums) - 1
+  while left &lt; right:
+    middle = (left + right) // 2
+    if nums[middle] &gt; nums[right]:
+      left = middle + 1
+    else:
+      right = middle
+  return nums[left]</code></pre></div>
+<p><strong>复杂度</strong>：无重复元素时为 $O(\log n)$ 时间、$O(1)$ 空间；允许重复时最坏退化为 $O(n)$。</p>
+<p><strong>易错点</strong>：不能简单与首元素比较后同时排除两端；有重复且中点等于右端时只能令 <code>right -= 1</code>；空数组需按题目契约处理。</p>
+<p><strong>对应例题</strong>：C++ 历史实现：<a href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/" target="_blank" rel="noreferrer">153. Find Minimum in Rotated Sorted Array</a></p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>C++ 历史实现：<a href="https://leetcode.com/problems/koko-eating-bananas/" target="_blank" rel="noreferrer">875. Koko Eating Bananas</a></li><li>C++ 历史实现：<a href="https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/" target="_blank" rel="noreferrer">1011. Capacity To Ship Packages Within D Days</a>，本地文件名题号误写为 1014。</li></ul>
+</section></section><section class="chapter" id="栈队列与单调结构" data-search="栈、队列与单调结构"><div class="chapter-index">05</div><h2>栈、队列与单调结构</h2><p>栈适合处理最近未匹配状态和嵌套结构；单调栈把“寻找左右第一个更大或更小”降为线性扫描；单调队列则在线维护滑动窗口极值。</p>
+<h3 id="后进先出状态">后进先出状态</h3>
+<section class="algorithm" data-search="栈模拟与嵌套解析"><h4 id="栈模拟与嵌套解析">栈模拟与嵌套解析<a class="anchor" href="#栈模拟与嵌套解析" aria-label="定位到 栈模拟与嵌套解析">#</a></h4>
+<p><strong>解决什么</strong>：括号匹配、路径化简、逆波兰表达式和带括号的嵌套编码。</p>
+<p><strong>核心原理</strong>：栈顶保存最近尚未完成的状态；遇到结束标记时弹出并与当前结果合并。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def evaluate_rpn(tokens):
+  stack = []
+  for token in tokens:
+    if token not in {&quot;+&quot;, &quot;-&quot;, &quot;*&quot;, &quot;/&quot;}:
+      stack.append(int(token))
+      continue
+    right = stack.pop()
+    left = stack.pop()
+    if token == &quot;+&quot;:
+      stack.append(left + right)
+    elif token == &quot;-&quot;:
+      stack.append(left - right)
+    elif token == &quot;*&quot;:
+      stack.append(left * right)
+    else:
+      stack.append(int(left / right))
+  return stack[-1]</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，空间 $O(n)$。</p>
+<p><strong>易错点</strong>：减法和除法的操作数顺序不能颠倒；Python <code>//</code> 对负数向下取整，题目要求向零截断时应使用 <code>int(left / right)</code>；弹栈前确保输入合法。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/evaluate-reverse-polish-notation/" target="_blank" rel="noreferrer">150. Evaluate Reverse Polish Notation</a>、<a href="https://leetcode.com/problems/decode-string/" target="_blank" rel="noreferrer">394. Decode String</a></p>
+</section>
+<h3 id="最近边界与贡献">最近边界与贡献</h3>
+<section class="algorithm" data-search="单调栈"><h4 id="单调栈">单调栈<a class="anchor" href="#单调栈" aria-label="定位到 单调栈">#</a></h4>
+<p><strong>解决什么</strong>：在线性时间找到每个元素左右第一个更大或更小元素，或计算元素作为区间最值的贡献。</p>
+<p><strong>核心原理</strong>：栈保存尚未找到右边界的下标；新元素破坏单调性时持续弹栈，并在弹出时结算答案。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def next_greater_distances(nums):
+  answer = [0] * len(nums)
+  stack = []
+  for index, value in enumerate(nums):
+    while stack and nums[stack[-1]] &lt; value:
+      previous = stack.pop()
+      answer[previous] = index - previous
+    stack.append(index)
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：每个下标至多入栈、出栈一次，时间 $O(n)$，空间 $O(n)$。</p>
+<p><strong>易错点</strong>：栈中通常存下标而非值；严格与非严格比较决定重复值归属；贡献法的左右边界通常一侧严格、一侧非严格，避免重复计数。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/sum-of-subarray-ranges/" target="_blank" rel="noreferrer">2104. Sum of Subarray Ranges</a>；C++ 历史实现：<a href="https://leetcode.com/problems/daily-temperatures/" target="_blank" rel="noreferrer">739. Daily Temperatures</a></p>
+</section>
+<h3 id="滑动窗口极值">滑动窗口极值</h3>
+<section class="algorithm" data-search="单调队列"><h4 id="单调队列">单调队列<a class="anchor" href="#单调队列" aria-label="定位到 单调队列">#</a></h4>
+<p><strong>解决什么</strong>：在线性时间维护固定长度窗口的最大值或最小值。</p>
+<p><strong>核心原理</strong>：双端队列保存仍在窗口内且可能成为最优值的下标；队首淘汰过期下标，队尾淘汰不优于新元素的候选。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from collections import deque
+
+def sliding_window_maximum(nums, window_size):
+  queue = deque()
+  answer = []
+  for index, value in enumerate(nums):
+    while queue and queue[0] &lt;= index - window_size:
+      queue.popleft()
+    while queue and nums[queue[-1]] &lt;= value:
+      queue.pop()
+    queue.append(index)
+    if index + 1 &gt;= window_size:
+      answer.append(nums[queue[0]])
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n)$，空间 $O(k)$，其中 $k$ 为窗口长度。</p>
+<p><strong>易错点</strong>：队列必须存下标才能判断过期；先后执行过期清理与队尾清理都要保持同一窗口语义；窗口形成前不要输出答案。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/sliding-window-maximum/" target="_blank" rel="noreferrer">239. Sliding Window Maximum</a></p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/simplify-path/" target="_blank" rel="noreferrer">71. Simplify Path</a></li><li>C++ 历史实现：<a href="https://leetcode.com/problems/min-stack/" target="_blank" rel="noreferrer">155. Min Stack</a></li></ul>
+</section></section><section class="chapter" id="堆与优先队列" data-search="堆与优先队列"><div class="chapter-index">06</div><h2>堆与优先队列</h2><p>堆只保证堆顶是全局最值，适合反复取最优候选，而不适合查找或删除任意元素。Python 的 <code>heapq</code> 是小顶堆，大顶堆通常存相反数。</p>
+<h3 id="有界候选集合">有界候选集合</h3>
+<section class="algorithm" data-search="top k 小顶堆"><h4 id="top-k-小顶堆">Top K 小顶堆<a class="anchor" href="#top-k-小顶堆" aria-label="定位到 Top K 小顶堆">#</a></h4>
+<p><strong>解决什么</strong>：从静态数组或数据流中持续维护最大的 $k$ 个元素，并快速得到第 $k$ 大。</p>
+<p><strong>核心原理</strong>：维护大小不超过 $k$ 的小顶堆；新元素入堆后若超长就弹出最小值，堆顶始终是当前第 $k$ 大。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>import heapq
+
+class KthLargest:
+  def __init__(self, k, nums):
+    self.k = k
+    self.heap = []
+    for value in nums:
+      self.add(value)
+
+  def add(self, value):
+    heapq.heappush(self.heap, value)
+    if len(self.heap) &gt; self.k:
+      heapq.heappop(self.heap)
+    return self.heap[0]</code></pre></div>
+<p><strong>复杂度</strong>：每次加入 $O(\log k)$，空间 $O(k)$；初始化为 $O(n\log k)$。</p>
+<p><strong>易错点</strong>：求最大的 $k$ 个应使用小顶堆；只有至少已有 $k$ 个元素时堆顶才有第 $k$ 大语义；堆内部数组并非整体有序。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/kth-largest-element-in-a-stream/" target="_blank" rel="noreferrer">703. Kth Largest Element in a Stream</a></p>
+</section>
+<h3 id="有序候选扩展">有序候选扩展</h3>
+<section class="algorithm" data-search="多路归并"><h4 id="多路归并">多路归并<a class="anchor" href="#多路归并" aria-label="定位到 多路归并">#</a></h4>
+<p><strong>解决什么</strong>：合并多个有序序列，或按从小到大的顺序生成二维有序候选中的前 $k$ 个。</p>
+<p><strong>核心原理</strong>：每一路只把当前最小候选放入堆；弹出后再加入同一路的后继，避免一次性枚举全部组合。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>import heapq
+
+def merge_sorted_lists(sequences):
+  heap = []
+  for sequence_index, sequence in enumerate(sequences):
+    if sequence:
+      heapq.heappush(heap, (sequence[0], sequence_index, 0))
+  result = []
+  while heap:
+    value, sequence_index, index = heapq.heappop(heap)
+    result.append(value)
+    next_index = index + 1
+    if next_index &lt; len(sequences[sequence_index]):
+      next_value = sequences[sequence_index][next_index]
+      heapq.heappush(heap, (next_value, sequence_index, next_index))
+  return result</code></pre></div>
+<p><strong>复杂度</strong>：合并总计 $n$ 个元素、$k$ 路序列时，时间 $O(n\log k)$，空间 $O(k)$。</p>
+<p><strong>易错点</strong>：堆元素要带来源和后继位置；初始只放每一路首项；元组前项相同时，后续字段必须可比较且不破坏业务语义。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/find-k-pairs-with-smallest-sums/" target="_blank" rel="noreferrer">373. Find K Pairs with Smallest Sums</a></p>
+</section>
+<h3 id="资源调度">资源调度</h3>
+<section class="algorithm" data-search="双堆事件调度"><h4 id="双堆事件调度">双堆事件调度<a class="anchor" href="#双堆事件调度" aria-label="定位到 双堆事件调度">#</a></h4>
+<p><strong>解决什么</strong>：任务按时间到达，需要优先复用已释放资源，并在无空闲资源时等待最早结束的任务。</p>
+<p><strong>核心原理</strong>：空闲堆按资源编号排序，占用堆按结束时间排序；处理新任务前先释放所有已结束资源，必要时从最早结束事件推进时间。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>import heapq
+
+def assign_resources(tasks, resource_count):
+  available = list(range(resource_count))
+  heapq.heapify(available)
+  busy = []
+  assignment = []
+  for start, end in sorted(tasks):
+    duration = end - start
+    while busy and busy[0][0] &lt;= start:
+      _, resource = heapq.heappop(busy)
+      heapq.heappush(available, resource)
+    if not available:
+      start, resource = heapq.heappop(busy)
+    else:
+      resource = heapq.heappop(available)
+    heapq.heappush(busy, (start + duration, resource))
+    assignment.append(resource)
+  return assignment</code></pre></div>
+<p><strong>复杂度</strong>：$n$ 个任务、$m$ 个资源时，时间 $O(n\log n+n\log m)$，空间 $O(m)$。</p>
+<p><strong>易错点</strong>：延迟任务时必须保留原持续时间；结束时间相同要按题意处理资源编号；释放条件是 <code>&lt; start</code> 还是 <code>&lt;= start</code> 取决于端点语义。</p>
+<p><strong>对应例题</strong>：Python 实证：<a href="https://leetcode.com/problems/meeting-rooms-iii/" target="_blank" rel="noreferrer">2402. Meeting Rooms III</a></p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 实证：<a href="https://leetcode.com/problems/furthest-building-you-can-reach/" target="_blank" rel="noreferrer">1642. Furthest Building You Can Reach</a>：用堆把稀缺资源留给更大的高度差。</li></ul>
+</section></section><section class="chapter" id="区间问题" data-search="区间问题"><div class="chapter-index">07</div><h2>区间问题</h2><h3 id="区间归并">区间归并</h3>
+<section class="algorithm" data-search="按左端点排序合并"><h4 id="按左端点排序合并">按左端点排序合并<a class="anchor" href="#按左端点排序合并" aria-label="定位到 按左端点排序合并">#</a></h4>
+<p><strong>解决什么</strong>：合并重叠区间、求覆盖并集，或先把零散区间规范化后再查询。</p>
+<p><strong>核心原理</strong>：按左端点排序后，尚未合并的区间只可能与结果末尾相交；相交时扩展右端点，否则开启新区间。闭区间中 <code>left &lt;= last_right</code> 表示接触也合并，半开区间需按题意调整。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def merge_intervals(intervals):
+  merged = []
+  for left, right in sorted(intervals):
+    if not merged or left &gt; merged[-1][1]:
+      merged.append([left, right])
+    else:
+      merged[-1][1] = max(merged[-1][1], right)
+  return merged</code></pre></div>
+<p><strong>复杂度</strong>：排序时间 $O(n\log n)$，扫描时间 $O(n)$；除返回结果外辅助空间取决于排序实现。</p>
+<p><strong>易错点</strong>：先明确端点开闭和“接触是否重叠”；新区间要复制成可修改对象；当前区间被包含时不能缩短已有右端点。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/remove-covered-intervals/" target="_blank" rel="noreferrer">1288. Remove Covered Intervals</a>，本地题解同样先排序，但执行的是包含区间计数而非直接套用合并模板。</p>
+</section>
+<h3 id="无权区间调度">无权区间调度</h3>
+<section class="algorithm" data-search="最早结束时间贪心"><h4 id="最早结束时间贪心">最早结束时间贪心<a class="anchor" href="#最早结束时间贪心" aria-label="定位到 最早结束时间贪心">#</a></h4>
+<p><strong>解决什么</strong>：选择最多个互不重叠区间、求最少删除数，或用最少的点命中所有区间。</p>
+<p><strong>核心原理</strong>：按右端点升序选择第一个与已选区间兼容的候选。最早结束的区间给后续留下最大空间；交换论证可将任一最优解的首个区间替换为它而不变差。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def max_non_overlapping(intervals):
+  chosen = 0
+  last_end = float(&quot;-inf&quot;)
+  for left, right in sorted(intervals, key=lambda interval: interval[1]):
+    if left &gt;= last_end:
+      chosen += 1
+      last_end = right
+  return chosen</code></pre></div>
+<p><strong>复杂度</strong>：时间 $O(n\log n)$，排序外辅助空间 $O(1)$。</p>
+<p><strong>易错点</strong>：<code>&gt;=</code> 还是 <code>&gt;</code> 由接触是否算重叠决定；不要按左端点贪心；“最少删除”应返回 <code>n - chosen</code>。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank" rel="noreferrer">435. Non-overlapping Intervals</a>；C++ 历史实现：<a href="https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/" target="_blank" rel="noreferrer">452. Minimum Number of Arrows to Burst Balloons</a></p>
+</section>
+<h3 id="重叠计数">重叠计数</h3>
+<section class="algorithm" data-search="事件扫描线"><h4 id="事件扫描线">事件扫描线<a class="anchor" href="#事件扫描线" aria-label="定位到 事件扫描线">#</a></h4>
+<p><strong>解决什么</strong>：求最大同时重叠数、最少分组数，或统计每个坐标处的活动区间数量。</p>
+<p><strong>核心原理</strong>：把每个区间拆成开始增量和结束减量，按坐标累加。闭区间 $[left,right]$ 可在 <code>right + 1</code> 处减一；一般坐标则必须把同点事件优先级编码进排序键。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>def maximum_overlap_closed(intervals):
+  events = []
+  for left, right in intervals:
+    events.append((left, 1))
+    events.append((right + 1, -1))
+  active = answer = 0
+  for _, delta in sorted(events):
+    active += delta
+    answer = max(answer, active)
+  return answer</code></pre></div>
+<p><strong>复杂度</strong>：事件排序时间 $O(n\log n)$，扫描时间 $O(n)$，空间 $O(n)$。</p>
+<p><strong>易错点</strong>：只有整数闭区间才能无条件使用 <code>right + 1</code>；半开区间同点先结束再开始；闭区间接触算重叠时同点先开始再结束。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/divide-intervals-into-minimum-number-of-groups/" target="_blank" rel="noreferrer">2406. Divide Intervals Into Minimum Number of Groups</a></p>
+</section>
+<h3 id="加权区间选择">加权区间选择</h3>
+<section class="algorithm" data-search="二分前驱加动态规划"><h4 id="二分前驱加动态规划">二分前驱加动态规划<a class="anchor" href="#二分前驱加动态规划" aria-label="定位到 二分前驱加动态规划">#</a></h4>
+<p><strong>解决什么</strong>：每个区间带收益时，选择互不重叠区间使总收益最大；普通最早结束贪心不再保证最优。</p>
+<p><strong>核心原理</strong>：按结束时间排序，令 <code>dp[i]</code> 为前 <code>i</code> 个任务的最大收益。对第 <code>i</code> 个任务二分最后一个结束时间不晚于其开始时间的前驱，在“不选”和“选并接前驱最优值”之间取最大值。</p>
+<div class="code-shell"><div class="code-label">python</div><pre><code>from bisect import bisect_right
+
+def weighted_interval_scheduling(jobs):
+  jobs = sorted(jobs, key=lambda job: job[1])
+  ends = [end for _, end, _ in jobs]
+  dp = [0] * (len(jobs) + 1)
+  for index, (start, _, profit) in enumerate(jobs, 1):
+    previous = bisect_right(ends, start, hi=index - 1)
+    dp[index] = max(dp[index - 1], dp[previous] + profit)
+  return dp[-1]</code></pre></div>
+<p><strong>复杂度</strong>：排序和全部二分为 $O(n\log n)$，DP 空间 $O(n)$。</p>
+<p><strong>易错点</strong>：前驱兼容条件决定使用 <code>bisect_right</code> 还是 <code>bisect_left</code>；二分范围不能包含当前任务；按开始时间递归和按结束时间迭代是两种不同但等价的状态设计。</p>
+<p><strong>对应例题</strong>：Python 本地实现：<a href="https://leetcode.com/problems/maximum-profit-in-job-scheduling/" target="_blank" rel="noreferrer">1235. Maximum Profit in Job Scheduling</a>，本地源码采用按开始时间排序、二分下一个可选任务的记忆化 DP。</p>
+<p><strong>补充练习</strong>：</p>
+<ul><li>Python 本地实现：<a href="https://leetcode.com/problems/my-calendar-i/" target="_blank" rel="noreferrer">729. My Calendar I</a>：在线检查新区间冲突。</li><li>C++ 历史实现：<a href="https://leetcode.com/problems/interval-list-intersections/" target="_blank" rel="noreferrer">986. Interval List Intersections</a>：两个有序区间列表双指针求交。</li></ul>
+</section></section>
+    <nav class="pager" aria-label="分册导航"><a href="01-foundations.html"><small>上一册</small><strong>分析与基础建模</strong></a><a class="next" href="03-recursion-and-state.html"><small>下一册</small><strong>递归与状态搜索</strong></a></nav>
+  </main>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script defer src="assets/app.js"></script>
+</body>
+</html>
