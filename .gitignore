@@ -1,0 +1,62 @@
+# Editors and IDEs
+.vscode/
+.idea/
+.vs/
+*.code-workspace
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Python bytecode, caches, and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+.venv/
+venv/
+env/
+ENV/
+
+# Coverage and test artifacts
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# C and C++ build artifacts
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.dylib
+*.pdb
+*.ilk
+*.dSYM/
+build/
+dist/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Operating system metadata
+.DS_Store
+Thumbs.db
+desktop.ini
