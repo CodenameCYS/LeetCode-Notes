@@ -4,17 +4,18 @@
 
 | 统计项 | 数量 |
 | --- | ---: |
-| 全部题目 | 2614 |
-| Easy（简单） | 699 |
-| Medium（中等） | 1426 |
-| Hard（困难） | 489 |
+| 全部题目 | 2642 |
+| Easy（简单） | 704 |
+| Medium（中等） | 1442 |
+| Hard（困难） | 496 |
 
-> 以上 2614 条题目记录由 2623 个源码文件按同一题号与题名归并而成。
+> 以上 2642 条题目记录由 2646 个 Git 已跟踪的源码文件按同一题号与题名归并而成。
 > 难易度来自 LeetCode 官方元数据；算法考点以本地源码结构为主，并以官方标签和题名语义补充。
 > 同号异题保留为独立记录；本地旧题名或带算法后缀的文件由唯一官方题号兜底匹配。
 
 | 题目编号 | 题目名称 | 难易度 | 算法考点 |
 | ---: | --- | :---: | --- |
+| 6 | Zigzag Conversion | 中等 | 字符串；模拟 |
 | 10 | Regular Expression Matching | 困难 | 递归；字符串；动态规划 |
 | 14 | Longest Common Prefix | 简单 | 字典树；数组；字符串 |
 | 15 | 3Sum | 中等 | 数组；双指针；排序 |
@@ -36,12 +37,14 @@
 | 65 | Valid Number | 困难 | 字符串 |
 | 68 | Text Justification | 困难 | 数组；字符串；模拟 |
 | 71 | Simplify Path | 中等 | 栈；字符串 |
+| 72 | Edit Distance | 中等 | 记忆化搜索；字符串；动态规划 |
 | 79 | Word Search | 中等 | 深度优先搜索；数组；字符串；回溯；矩阵 |
 | 80 | Remove Duplicates from Sorted Array II | 中等 | 数组；双指针 |
 | 82 | Remove Duplicates from Sorted List II | 中等 | 链表；双指针 |
 | 86 | Partition List | 中等 | 链表；双指针 |
 | 90 | Subsets II | 中等 | 位运算；数组；回溯 |
 | 92 | Reverse Linked List II | 中等 | 链表 |
+| 93 | Restore IP Addresses | 中等 | 记忆化搜索；字符串；回溯 |
 | 95 | Unique Binary Search Trees II | 中等 | 树；二叉搜索树；动态规划；回溯；二叉树 |
 | 97 | Interleaving String | 中等 | 记忆化搜索；字符串；动态规划 |
 | 99 | Recover Binary Search Tree | 中等 | 树；深度优先搜索；二叉搜索树；二叉树 |
@@ -56,6 +59,7 @@
 | 110 | Balanced Binary Tree | 简单 | 树；深度优先搜索；二叉树 |
 | 113 | Path Sum II | 中等 | 树；深度优先搜索；回溯；二叉树 |
 | 114 | Flatten Binary Tree to Linked List | 中等 | 栈；树；深度优先搜索；链表；二叉树 |
+| 115 | Distinct Subsequences | 困难 | 记忆化搜索；字符串；动态规划 |
 | 116 | Populating Next Right Pointers in Each Node | 中等 | 树；深度优先搜索；广度优先搜索；链表；二叉树 |
 | 117 | Populating Next Right Pointers in Each Node II | 中等 | 树；深度优先搜索；广度优先搜索；链表；二叉树 |
 | 119 | Pascal's Triangle II | 简单 | 数组；动态规划 |
@@ -529,6 +533,7 @@
 | 937 | Reorder Data in Log Files | 中等 | 数组；字符串；排序 |
 | 938 | Range Sum of BST | 简单 | 树；深度优先搜索；二叉搜索树；二叉树 |
 | 939 | Minimum Area Rectangle | 中等 | 几何；数组；哈希表；数学；排序 |
+| 940 | Distinct Subsequences II | 困难 | 数组；字符串；动态规划 |
 | 941 | Valid Mountain Array | 简单 | 数组 |
 | 942 | DI String Match | 简单 | 贪心；数组；双指针；字符串 |
 | 944 | Delete Columns to Make Sorted | 简单 | 数组；字符串；最长上升子序列 |
@@ -2629,3 +2634,26 @@
 | 4025 | Minimize the Maximum Waiting Time at Synchronized Traffic Lights | 中等 | 二分答案 |
 | 4026 | Maximum Gap Between Stations | 中等 | 双向贪心；子序列匹配；双指针 |
 | 4027 | Elevator Requests III | 困难 | 状态压缩 DP；记忆化搜索；区间极值优化；位运算 |
+| 4030 | Check ASCII Palindromic | 简单 | 字符串处理；回文；模拟 / 枚举 |
+| 4031 | Find All Numbers Disappeared in an Array II | 中等 | 哈希表 / 计数；数组 / 枚举 |
+| 4032 | Longest Subarray With at Most K Distinct Prime Factors | 中等 | 滑动窗口；哈希表 / 计数；数学 / 数论 |
+| 4033 | Valid K-Unique Subarrays I | 困难 | 线段树；哈希表 / 计数 |
+| 4034 | Minimum Bishop Moves to Reach Target | 中等 | 数学 / 数论；模拟 / 枚举 |
+| 4035 | Maximum Valid Split Positions I | 中等 | 数学 / 数论；前缀 / 后缀 |
+| 4036 | Lexicographically Largest String After Pair Transformations | 中等 | 贪心；数学 / 数论 |
+| 4037 | Maximum Valid Split Positions II | 困难 | 数学 / 数论；前缀 / 后缀 |
+| 4038 | Count Integers Appearing in a Single Block | 简单 | 哈希表 / 计数；数组 / 枚举 |
+| 4039 | Sum of Decoded Numbers | 中等 | 数学 / 数论；快速幂；字符串处理 |
+| 4040 | Minimum Operations to Form Subset Sum I | 中等 | 分组背包；动态规划 |
+| 4041 | Minimum Operations to Form Subset Sum II | 困难 | 分组背包；动态规划 |
+| 4043 | Count Rotations With Exactly K Equal Adjacent Pairs | 简单 | 哈希表 / 计数；字符串处理；模拟 / 枚举 |
+| 4044 | Count Good Cyclic Rotations | 中等 | 前缀和；数组 / 枚举 |
+| 4045 | Count Robot Groups | 中等 | 单调栈；贪心 |
+| 4046 | Minimum Cost Path With At Most K Turns | 困难 | 图；优先队列 / 堆；动态规划 |
+| 4048 | Count Values With Equally Spaced Occurrences I | 简单 | 哈希表 / 计数；数组 / 枚举 |
+| 4049 | Count Values With Equally Spaced Occurrences II | 中等 | 哈希表 / 计数；数组 / 枚举 |
+| 4050 | Minimum Days to Score Exactly N Points | 中等 | 完全背包；动态规划 |
+| 4051 | Count Subarrays with Distant Sums | 困难 | 前缀和；二分查找；有序集合 |
+| 4052 | Cyclically Shift Rows and Columns | 简单 | 矩阵；模拟 / 枚举 |
+| 4053 | Minimum Operations to Make Every Element Palindromic | 中等 | 回文；预处理；二分查找 |
+| 4054 | Count Shadow Pairs I | 中等 | 单调栈；二分查找 |
