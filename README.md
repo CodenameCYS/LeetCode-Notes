@@ -4,13 +4,13 @@
 
 ## 题目与算法考点总表
 
-[problems/Problem-Catalog.md](problems/Problem-Catalog.md) 收录 `problems/` 下的全部 **2623 份 Python / C++ 源码**，按题号与规范化题名合并为 **2614 条记录**。总表中的难易度来自 LeetCode 官方元数据；算法考点以本地源码的实际实现为主，并以官方题目标签补充，而非只套用题目的常见标准解法。
+[problems/Problem-Catalog.md](problems/Problem-Catalog.md) 收录 `problems/` 下全部 **2646 份 Git 已跟踪的 Python / C++ 源码**，按题号与规范化题名合并为 **2642 条记录**。总表中的难易度来自 LeetCode 官方元数据；算法考点以本地源码的实际实现为主，并以官方题目标签补充，而非只套用题目的常见标准解法。
 
 总表负责完整覆盖，Guidebook 负责教学精选：同一道题可以出现在总表中，但只有实现能清晰体现方法、边界和复杂度时，才会作为手册例题。
 
 ## 算法学习手册
 
-完整知识体系已整理为可浏览的静态 Guidebook，包含 **26 个题目类型、103 个典型算法**，以及每个算法的核心原理、Python 模板、复杂度、易错点和本地例题。
+完整知识体系已整理为可浏览的静态 Guidebook，包含 **26 个题目类型、104 个典型算法**，以及每个算法的核心原理、Python 模板、复杂度、易错点和官方题目链接。
 
 ### [打开算法学习完整思维导图 →](guidebook/main.html)
 
@@ -29,7 +29,7 @@
 - 从 [problems/Problem-Catalog.md](problems/Problem-Catalog.md) 按题号查找全部本地实现及算法考点。
 - 从 [guidebook/main.html](guidebook/main.html) 按知识依赖浏览完整思维导图。
 - 在各分册顶部搜索算法或概念，例如 `LCA`、`Manacher`、`滑动窗口`。
-- 例题链接会打开仓库中的本地 Python / C++ 实现；文档中的状态标签说明代码与模板的对应程度。
+- 例题链接会打开 LeetCode 官方题目页；文档中的状态标签说明本地实现与模板的对应程度。
 
 ## 内容维护
 
