@@ -192,6 +192,7 @@
       - [0-1 背包与完全背包](#0-1-背包与完全背包)
     - [序列对齐](#序列对齐)
       - [双序列 DP](#双序列-dp)
+      - [子序列计数与去重](#子序列计数与去重)
     - [区间合并](#区间合并)
       - [区间 DP](#区间-dp)
     - [线性区间扩张](#线性区间扩张)
@@ -2509,6 +2510,8 @@ def rob_linear(values):
 
 **核心原理**：一维压缩时，0-1 背包容量倒序，防止同一物品在本轮被重复使用；完全背包容量正序，允许读取本轮刚更新的状态来复用当前物品。
 
+当每个原始元素可变换为多个候选值，但最终最多只能选其中一个时，这是**分组背包**：每一组更新前都从上一组的 `dp` 复制出新数组，避免同组的两个候选被同时选中。它适合“每个数可经过若干操作变成多种值，再凑目标和”的模型。
+
 ```python
 def can_partition(nums):
   total = sum(nums)
@@ -2523,11 +2526,25 @@ def can_partition(nums):
   return reachable[target]
 ```
 
+```python
+def grouped_min_cost(groups, target):
+  # groups[i] 中每项为 (weight, cost)，每组至多选一项。
+  dp = [float("inf")] * (target + 1)
+  dp[0] = 0
+  for choices in groups:
+    next_dp = dp[:]
+    for weight, cost in choices:
+      for capacity in range(target, weight - 1, -1):
+        next_dp[capacity] = min(next_dp[capacity], dp[capacity - weight] + cost)
+    dp = next_dp
+  return -1 if dp[target] == float("inf") else dp[target]
+```
+
 **复杂度**：$n$ 件物品、容量 $C$ 时，时间 $O(nC)$，空间 $O(C)$。
 
-**易错点**：遍历方向决定物品能否复用；最小化问题应以 $+\infty$ 初始化不可达状态；计数、排列数和组合数的循环顺序不同。
+**易错点**：遍历方向决定物品能否复用；最小化问题应以 $+\infty$ 初始化不可达状态；分组背包必须从上一组 `dp` 转移，不能在同组内原地累积；计数、排列数和组合数的循环顺序不同。
 
-**对应例题**：Python 本地实现：[322. Coin Change](https://leetcode.com/problems/coin-change/)、[416. Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
+**对应例题**：Python 本地实现：[322. Coin Change](https://leetcode.com/problems/coin-change/) 展示完全背包；[416. Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/) 展示 0-1 背包；[4040. Minimum Operations to Form Subset Sum I](https://leetcode.com/problems/minimum-operations-to-form-subset-sum-i/) 与 [4041. Minimum Operations to Form Subset Sum II](https://leetcode.com/problems/minimum-operations-to-form-subset-sum-ii/) 将每个元素的可达变换值作为一组候选；[4050. Minimum Days to Score Exactly N Points](https://leetcode.com/problems/minimum-days-to-score-exactly-n-points/) 使用正序最小化转移。
 
 ### 序列对齐
 
@@ -2555,7 +2572,28 @@ def longest_common_subsequence(first, second):
 
 **易错点**：为空前缀预留第 0 行和第 0 列；子序列不要求连续；正则匹配等特殊问题的转移不能直接等同于 LCS。
 
-**对应例题**：Python 本地实现：[583. Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/) 使用记忆化 LCS；C++ 历史实现：[1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)；Python 本地实现：[3995. Minimum Cost to Convert String III](https://leetcode.com/problems/minimum-cost-to-convert-string-iii/) 使用字符串分段 DP。
+**对应例题**：Python 本地实现：[72. Edit Distance](https://leetcode.com/problems/edit-distance/) 用记忆化状态枚举插入、删除与替换；[583. Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/) 使用记忆化 LCS；C++ 历史实现：[1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)；Python 本地实现：[3995. Minimum Cost to Convert String III](https://leetcode.com/problems/minimum-cost-to-convert-string-iii/) 使用字符串分段 DP。
+
+#### 子序列计数与去重
+
+**解决什么**：统计一个字符串中能形成目标子序列的方案数，或统计全部互异非空子序列的数量。
+
+**核心原理**：匹配固定目标时，令 `dp[i][j]` 表示源串从位置 `i` 开始构成目标串从位置 `j` 开始的方案数；当前字符匹配时可以“选”或“不选”，否则只能跳过。统计全部互异子序列时，按“最后一个字符”保存方案数：读到字符 `char` 后，新产生的以 `char` 结尾的子序列数量等于空串加上此前所有方案，直接覆盖旧值即可消除重复。
+
+```python
+def count_distinct_subsequences(text):
+  ending_with = [0] * 26
+  for char in text:
+    index = ord(char) - ord("a")
+    ending_with[index] = 1 + sum(ending_with)
+  return sum(ending_with)
+```
+
+**复杂度**：固定目标的二维 DP 为 $O(mn)$ 时间、$O(mn)$ 空间，可压缩为 $O(n)$；字符集大小为 $\sigma$ 时，按末字符去重的 DP 为 $O(n\sigma)$ 时间、$O(\sigma)$ 空间。
+
+**易错点**：方案数不是可行性，初值和加法而非 `min/max` 决定答案；固定目标中目标串耗尽时应返回 1；去重计数要覆盖该字符旧状态，而非在总数上再次累加；题目要求时每次转移取模。
+
+**对应例题**：Python 本地实现：[115. Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences/) 统计形成指定目标串的方案数；[940. Distinct Subsequences II](https://leetcode.com/problems/distinct-subsequences-ii/) 以字符结尾状态去重并取模。
 
 ### 区间合并
 
