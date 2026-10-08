@@ -4,12 +4,12 @@
 
 | 统计项 | 数量 |
 | --- | ---: |
-| 全部题目 | 2642 |
-| Easy（简单） | 704 |
-| Medium（中等） | 1442 |
-| Hard（困难） | 496 |
+| 全部题目 | 2660 |
+| Easy（简单） | 708 |
+| Medium（中等） | 1451 |
+| Hard（困难） | 501 |
 
-> 以上 2642 条题目记录由 2646 个 Git 已跟踪的源码文件按同一题号与题名归并而成。
+> 以上 2660 条题目记录由 2670 个 Git 已跟踪的源码文件按同一题号与题名归并而成。
 > 难易度来自 LeetCode 官方元数据；算法考点以本地源码结构为主，并以官方标签和题名语义补充。
 > 同号异题保留为独立记录；本地旧题名或带算法后缀的文件由唯一官方题号兜底匹配。
 
@@ -754,6 +754,7 @@
 | 1396 | Design Underground System | 中等 | 设计；哈希表；字符串 |
 | 1399 | Count Largest Group | 简单 | 哈希表；数学；计数 |
 | 1400 | Construct K Palindrome Strings | 中等 | 贪心；哈希表；字符串；计数 |
+| 1401 | Circle and Rectangle Overlapping | 中等 | 几何；数学 |
 | 1402 | Reducing Dishes | 困难 | 贪心；数组；动态规划；排序 |
 | 1403 | Minimum Subsequence in Non-Increasing Order | 简单 | 贪心；数组；排序 |
 | 1404 | Number of Steps to Reduce a Number in Binary Representation to One | 中等 | 位运算；字符串；模拟 |
@@ -839,6 +840,7 @@
 | 1514 | Path with Maximum Probability | 中等 | 优先队列 / 堆；图；数组；最短路；Dijkstra 算法；堆（优先队列） |
 | 1518 | Water Bottles | 简单 | 数学；模拟 |
 | 1519 | Number of Nodes in the Sub-Tree With the Same Label | 中等 | 树；深度优先搜索；广度优先搜索；哈希表；计数；树形 DP |
+| 1520 | Maximum Number of Non-Overlapping Substrings | 困难 | 线段树；动态规划；位运算；二分查找；字符串 |
 | 1521 | Find a Value of a Mysterious Function Closest to Target | 困难 | 位运算；线段树；数组；二分查找；Sparse Table |
 | 1523 | Count Odd Numbers in an Interval Range | 简单 | 数学 |
 | 1524 | Number of Sub-arrays With Odd Sum | 中等 | 数组；数学；动态规划；前缀和 |
@@ -2657,3 +2659,19 @@
 | 4052 | Cyclically Shift Rows and Columns | 简单 | 矩阵；模拟 / 枚举 |
 | 4053 | Minimum Operations to Make Every Element Palindromic | 中等 | 回文；预处理；二分查找 |
 | 4054 | Count Shadow Pairs I | 中等 | 单调栈；二分查找 |
+| 4056 | Number of Intersecting Interval Pairs I | 简单 | 数组；区间；模拟 / 枚举 |
+| 4057 | Number of Intersecting Interval Pairs II | 中等 | 排序；二分查找；有序集合；区间 |
+| 4058 | Maximum Pulse Value After One Subarray Rotation | 中等 | 数组；前缀和；最优子数组 |
+| 4059 | Lexicographically Largest Power Array | 困难 | 位运算；排序；贪心 |
+| 4061 | Minimum Queen Moves to Reach Target | 简单 | 数学；几何；模拟 / 枚举 |
+| 4062 | Transform Array Using Pair Operations | 中等 | 数组；数学；不变量 |
+| 4063 | Longest Subarray Divisible by K with At Most One Negation I | 中等 | 前缀和；哈希表；数组；枚举 |
+| 4064 | Longest Subarray Divisible by K with At Most One Negation II | 困难 | 前缀和；二分查找；数组 |
+| 4065 | Rearrange Array by Removing Distinct Values | 简单 | 哈希表 / 计数；排序；数组 |
+| 4066 | Maximum Equal Adjacent Pairs After at Most One Replacement | 中等 | 哈希表 / 计数；数组 |
+| 4067 | Longest Subarray With Restricted Pair Sums | 中等 | 滑动窗口；哈希表；排序；数组；枚举 |
+| 4068 | Maximize Meeting Earnings with Idle Gaps | 困难 | 动态规划；二分查找；区间 |
+| 4070 | Minimum Rotations to Dial a Number I | 简单 | 数学；字符串；模拟 / 枚举 |
+| 4071 | Minimum Rotations to Dial a Number II | 中等 | 前缀和；字符串；模拟 / 枚举 |
+| 4072 | Maximum Alternating Subarray Sum With One Deletion | 中等 | 记忆化搜索；动态规划；数组 |
+| 4073 | Count Good Strings | 困难 | 矩阵快速幂；动态规划；数学 |

@@ -1,6 +1,6 @@
 # LeetCode 做题笔记
 
-本仓库收录了 2600 余份 Python / C++ 题解，完整清单及源码分析见[题目与算法考点总表](../problems/Problem-Catalog.md)。本文以 **Python 学习与复习**为主线，只选取能清晰体现方法、实现质量和边界条件的代表题；早期 C++ 题解保留作历史实现和思路参考。分类与例题说明均以本地源码的真实实现为依据，不因题号新或提交时间近而自动收录。
+本仓库收录了 2670 份 Git 已跟踪的 Python / C++ 题解，完整清单及源码分析见[题目与算法考点总表](../problems/Problem-Catalog.md)。本文以 **Python 学习与复习**为主线，只选取能清晰体现方法、实现质量和边界条件的代表题；早期 C++ 题解保留作历史实现和思路参考。分类与例题说明均以本地源码的真实实现为依据，不因题号新或提交时间近而自动收录。
 
 > 一道题往往同时涉及多个知识点。例如「滑动窗口最大值」既属于滑动窗口，也使用单调队列；本文将它放在最有辨识度的主分类下。全文统一采用“**题目类型 → 知识模块 → 典型算法**”三级知识结构；典型算法说明包含原理、Python 模板、复杂度、易错点和对应例题。
 
@@ -245,6 +245,7 @@
       - [欧几里得与扩展欧几里得](#欧几里得与扩展欧几里得)
     - [幂与模运算](#幂与模运算)
       - [二进制快速幂](#二进制快速幂)
+      - [矩阵快速幂](#矩阵快速幂)
     - [素数预处理](#素数预处理)
       - [埃氏筛](#埃氏筛)
     - [组合计数](#组合计数)
@@ -3391,6 +3392,42 @@ def fast_power(base, exponent, mod=None):
 
 **对应例题**：Python 本地实现：[1922. Count Good Numbers](https://leetcode.com/problems/count-good-numbers/) 使用模快速幂；C++ 历史实现：[50. Pow(x, n)](https://leetcode.com/problems/powx-n/)、[372. Super Pow](https://leetcode.com/problems/super-pow/)
 
+#### 矩阵快速幂
+
+**解决什么**：状态满足固定阶线性递推、但下标可达 $10^{15}$ 甚至更大时，快速求第 $n$ 项或递推状态向量。
+
+**核心原理**：把 $d$ 个相邻状态组成列向量 `state`，将一次递推写成 `next_state = transition * state`。于是第 $n$ 次转移为 $transition^n * state$，可直接套二进制快速幂；矩阵乘法中每次累加都要取模。
+
+```python
+def multiply(left, right, mod):
+  size = len(left)
+  product = [[0] * size for _ in range(size)]
+  for row in range(size):
+    for middle in range(size):
+      if left[row][middle] == 0:
+        continue
+      for column in range(size):
+        product[row][column] = (product[row][column]
+          + left[row][middle] * right[middle][column]) % mod
+  return product
+
+def matrix_power(matrix, exponent, mod):
+  size = len(matrix)
+  result = [[int(row == column) for column in range(size)] for row in range(size)]
+  while exponent:
+    if exponent & 1:
+      result = multiply(result, matrix, mod)
+    matrix = multiply(matrix, matrix, mod)
+    exponent >>= 1
+  return result
+```
+
+**复杂度**：$d\times d$ 转移矩阵的时间为 $O(d^3\log n)$，空间为 $O(d^2)$；当 $d=2$ 或 $d$ 很小时，重点收益来自把线性下标降为对数级。
+
+**易错点**：单位矩阵是零次转移；状态向量的顺序必须与矩阵行、列定义一致；递推含常数项时需增加常量维度；矩阵并不总可交换，乘法顺序不能随意调换。
+
+**对应例题**：Python 本地实现：[4073. Count Good Strings](https://leetcode.com/problems/count-good-strings/) 将长度递推表示为 $2\times2$ 转移矩阵，并用快速幂处理超大 $n$。
+
 ### 素数预处理
 
 #### 埃氏筛
@@ -3746,7 +3783,7 @@ def segments_strictly_cross(a, b, c, d):
 
 ## 使用说明
 
-- 点击题目名称可直接打开当前仓库中的对应源码。
-- 同一题存在 Python 和 C++ 两种实现时，本页通常只链接其中一种，另一种可按题号在目录中查找。
+- 点击题目名称可直接打开 LeetCode 官方题目页。
+- [题目与算法考点总表](../problems/Problem-Catalog.md) 列出本地源码及其实现考点；同一题的多语言实现可按题号定位。
 - 文件名以题号开头，使用编辑器按题号搜索是定位题解最快的方式。
-- 新增题解时，可按其主要思想补充到对应分类；若一题具有多个鲜明标签，也可以在多个分类中交叉引用。
+- 新增题解时，只有能补足当前模型、模板或边界说明的实现才需要加入 Guidebook；其余题目收录在总表即可。
